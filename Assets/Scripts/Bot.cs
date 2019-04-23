@@ -17,7 +17,7 @@ public class Bot : MonoBehaviour
         // Perform tree search for best strategy
     }
 
-    private evalState(Board board)
+    private void evalState(Board board)
     {
         // Create leaf node of the search tree
     }
