@@ -10,14 +10,14 @@ public class Square : MonoBehaviour
     public GameObject O;
     private int filledMarks;
     private int chosenMarks;
-    public List<Tuple<int, int>> presentMarks;
+    public List<Mark> presentMarks;
 
     // Start is called before the first frame update
     void Start()
     {
         innerSquares = transform.Find("InnerSquares");
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
-        presentMarks = new List<Tuple<int, int>>();
+        presentMarks = new List<Mark>();
     }
 
     public void addMark()
@@ -35,8 +35,8 @@ public class Square : MonoBehaviour
         {
 
         }
-        Tuple<int, int> mark = new Tuple<int, int>(player, turn);
-        presentMarks.add(mark);
+        Mark mark = new Mark(player, turn);
+        presentMarks.Add(mark);
     }
 
     public void test()

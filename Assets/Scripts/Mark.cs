@@ -4,15 +4,12 @@ using UnityEngine;
 
 public class Mark : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public int player;
+    public int turn;
 
-    // Update is called once per frame
-    void Update()
+    public Mark(int p, int t)
     {
-        
+        player = p;
+        turn = t;
     }
 }
