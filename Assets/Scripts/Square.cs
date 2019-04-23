@@ -24,6 +24,11 @@ public class Square : MonoBehaviour
         alreadyMarked = false;
     }
 
+    public Square()
+    {
+        Start();
+    }
+
     public void addMark()
     {
         int numMarks = gameManager.getNumMarks();
