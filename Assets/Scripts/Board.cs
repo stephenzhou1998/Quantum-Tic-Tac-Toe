@@ -13,7 +13,7 @@ public class Board : MonoBehaviour
     {
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
         entGraph = new Graph();
-        squares = new ArrayList<Square>();
+        squares = new List<Square>();
         for (int i=0; i < 9; i++)
         {
             squares.Add(new Square());

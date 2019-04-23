@@ -5,51 +5,49 @@ using UnityEngine;
 public class Graph : MonoBehaviour
 
 {
-    private HashMap<Mark,HashSet<Mark>> adjlist;
+    private Dictionary<Mark,HashSet<Mark>> adjlist;
     int numVertices;
-    int numEdegs;
-    public Grahph(int numEdegs, int numVertices){
-        this.numEdegs = numEdegs;
-        this.numVertices = numVertices;
-        this.adjlist = new HashMap<>();
-    }
-    
-    // Start is called before the first frame update
-    void Start()
+    int numEdges;
+
+    public Graph()
     {
-        
+        this.adjlist = new Dictionary<Mark, HashSet<Mark>>();
     }
 
-
+    public Graph(int numEdges, int numVertices){
+        this.numEdges = numEdges;
+        this.numVertices = numVertices;
+        this.adjlist = new Dictionary<Mark, HashSet<Mark>>();
+    }
 
     public void addEdge(Mark u, Mark v){
-        if(adjlist.get(u) == null){
-            adjlist.get(u) = new LinkedList<Mark>();
+        if(adjlist[u] == null){
+            adjlist[u] = new HashSet<Mark>();
         }
-        adjlist.get(u).add(v);
-        if(adjlist.get(v) == null){
-            adjlist.get(v) = new LinkedList<Mark>();
+        adjlist[u].Add(v);
+        if(adjlist[v] == null){
+            adjlist[v] = new HashSet<Mark>();
         }
-        adjlist.get(v).add(u);
+        adjlist[v].Add(u);
 
     }
     
     public HashSet<Mark> getCycle(Mark i){
-        HashSet<Mark> visited = new HashSet<>();
+        HashSet<Mark> visited = new HashSet<Mark>();
         if(dfs(i,visited) == true){
-            for(Mark j: visited){
+            foreach (Mark j in visited){
                 dfs(j,visited);
             }
             return visited;
         }
         return null;
     }
-    public boolean dfs(Mark i, HashSet visited){
-        if(visited.contains(i)){
+    public bool dfs(Mark i, HashSet<Mark> visited){
+        if(visited.Contains(i)){
             return true;
         }else{
-            visited.add(i);
-            for(Mark j : adjlist.get(i)){
+            visited.Add(i);
+            foreach (Mark j in adjlist[i]){
                 dfs(j,visited);
             }
             return false;
@@ -57,10 +55,10 @@ public class Graph : MonoBehaviour
         
     }
 
-    public boolean removeCycle(Mark v){
+    public bool removeCycle(Mark v){
        
         if(getCycle(v) != null){
-            for(Mark j: getCycle(v)){
+            foreach (Mark j in getCycle(v)){
                 deleteEdge(v,j);
             }
             return true;
@@ -69,12 +67,12 @@ public class Graph : MonoBehaviour
 
     }
     public void deleteEdge(Mark u, Mark v){
-        if(adjlist.get(u).contains(v)){
-            adjlist.get(u).remove(v);
+        if(adjlist[u].Contains(v)){
+            adjlist[u].Remove(v);
         }
         
-        if(adjlist.get(v) l){
-            adjlist.get(v).remove(u);
+        if(adjlist[v].Contains(u)){
+            adjlist[v].Remove(u);
         }
         
 

@@ -26,7 +26,7 @@ public class Square : MonoBehaviour
 
     public Square()
     {
-        Start();
+        
     }
 
     public void addMark()
@@ -73,11 +73,5 @@ public class Square : MonoBehaviour
     public void reset()
     {
         alreadyMarked = false;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
