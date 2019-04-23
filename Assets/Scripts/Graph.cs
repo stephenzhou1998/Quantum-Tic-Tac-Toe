@@ -5,7 +5,7 @@ using UnityEngine;
 public class Graph : MonoBehaviour
 
 {
-    private HashMap<Mark,LinkedList<Mark>> adjlist;
+    private HashMap<Mark,HashSet<Mark>> adjlist;
     int numVertices;
     int numEdegs;
     public Grahph(int numEdegs, int numVertices){
@@ -34,15 +34,13 @@ public class Graph : MonoBehaviour
 
     }
     
-    public HashSet<Mark> getCycle(){
-        for(Mark i:adjlist.keys()){
-            HashSet<Mark> visited = new HashSet<>();
-            if(dfs(i,visited) == true){
-                for(Mark j: visited){
-                    dfs(j,visited);
-                }
-                return visited;
+    public HashSet<Mark> getCycle(Mark i){
+        HashSet<Mark> visited = new HashSet<>();
+        if(dfs(i,visited) == true){
+            for(Mark j: visited){
+                dfs(j,visited);
             }
+            return visited;
         }
         return null;
     }
@@ -62,7 +60,7 @@ public class Graph : MonoBehaviour
     public boolean removeCycle(Mark v){
        
         if(getCycle(v) != null){
-            for(Mark j: getCycle){
+            for(Mark j: getCycle(v)){
                 deleteEdge(v,j);
             }
             return true;
