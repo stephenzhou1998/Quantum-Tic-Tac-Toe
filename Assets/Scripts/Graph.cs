@@ -45,7 +45,6 @@ public class Graph : MonoBehaviour
             }
         }
         return null;
-
     }
     public boolean dfs(Mark i, HashSet visited){
         if(visited.contains(i)){
@@ -66,7 +65,9 @@ public class Graph : MonoBehaviour
             for(Mark j: getCycle){
                 deleteEdge(v,j);
             }
+            return true;
         }
+        return false;
 
     }
     public void deleteEdge(Mark u, Mark v){
