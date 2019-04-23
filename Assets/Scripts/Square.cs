@@ -11,6 +11,7 @@ public class Square : MonoBehaviour
     private GameManager gameManager;
     public GameObject X;
     public GameObject O;
+    public int position;
     private bool alreadyMarked;
     private int filledMarks;
     public List<Mark> presentMarks;
@@ -64,10 +65,10 @@ public class Square : MonoBehaviour
             }
         }
         toAdd.GetComponent<TextMeshProUGUI>().text = restore;
-        Mark mark = new Mark(player, turn);
+        Mark mark = new Mark(player, turn, position);
         presentMarks.Add(mark);
         alreadyMarked = true;
-        gameManager.addMark();
+        gameManager.addMark(mark);
     }
 
     public void reset()

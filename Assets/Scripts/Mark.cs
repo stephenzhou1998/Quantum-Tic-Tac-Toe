@@ -6,10 +6,12 @@ public class Mark : MonoBehaviour
 {
     public int player;
     public int turn;
+    public int position;
 
-    public Mark(int p, int t)
+    public Mark(int p, int t, int pos)
     {
         player = p;
         turn = t;
+        position = pos;
     }
 }
