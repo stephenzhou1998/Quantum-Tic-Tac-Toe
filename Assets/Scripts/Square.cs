@@ -10,27 +10,33 @@ public class Square : MonoBehaviour
     public GameObject O;
     private int filledMarks;
     private int chosenMarks;
+    public List<Tuple<int, int>> presentMarks;
 
     // Start is called before the first frame update
     void Start()
     {
         innerSquares = transform.Find("InnerSquares");
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
+        presentMarks = new List<Tuple<int, int>>();
     }
 
     public void addMark()
     {
+        int player = gameManager.getCurrentPlayer();
+        int turn = gameManager.getTurnNum();
         GameObject toAdd;
-        if (gameManager.getCurrentPlayer() == 1)
+        if (player == 1)
         {
             toAdd = X;
-        } else if (gameManager.getCurrentPlayer() == 2) {
+        } else if (player == 2) {
             toAdd = O;
         }
         foreach (Transform square in innerSquares)
         {
 
         }
+        Tuple<int, int> mark = new Tuple<int, int>(player, turn);
+        presentMarks.add(mark);
     }
 
     public void test()
