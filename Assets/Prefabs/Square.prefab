@@ -212,7 +212,7 @@ GameObject:
   - component: {fileID: 1623112965728291542}
   - component: {fileID: 1623112965728291541}
   m_Layer: 5
-  m_Name: Square
+  m_Name: InnerSquares
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -321,7 +321,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1623112965728291543}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7159725580118285686}
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1623112965728291541
@@ -1072,6 +1083,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c3cd977ccd270c41a9730bbfc14a43f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  X: {fileID: 4778057534372558475, guid: ba1e4d1e19c52dd4898a204ddd9968bf, type: 3}
+  O: {fileID: 7809423370018002970, guid: 53f33c7d7bb77c3468e03ad25a1cf21b, type: 3}
 --- !u!1 &7481845924182694222
 GameObject:
   m_ObjectHideFlags: 0

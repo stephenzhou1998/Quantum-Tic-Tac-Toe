@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\Board.cs" />
+     <Compile Include="Assets\Scripts\GameManager.cs" />
      <Compile Include="Assets\Scripts\Mark.cs" />
      <Compile Include="Assets\Scripts\SpookyMark.cs" />
      <Compile Include="Assets\Scripts\Square.cs" />
