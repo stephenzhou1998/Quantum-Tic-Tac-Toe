@@ -23,32 +23,34 @@ public class Board : MonoBehaviour
         }
     }
 
-    public void addSpookyMark(Mark mark1, Mark mark2)
+    public SpookyMark addSpookyMark(Mark mark1, Mark mark2)
     {
+        // Commented out code uses SpookyMarks to detect cycles, but that was buggy and 
+        // too complicated, so now we are using Squares to detect cycles.
         SpookyMark s = new SpookyMark(mark1, mark2);
-        mark1.sm = s;
-        mark2.sm = s;
-        entGraph.addVertex(s);
+        //mark1.sm = s;
+        //mark2.sm = s;
+        //entGraph.addVertex(s);
         spookyMarks.Add(s);
         //Debug.Log("Current Spooky Marks: ");
         //foreach (SpookyMark sm in spookyMarks)
         //{
         //    Debug.Log(sm.ToString());
         //}
-        List<Mark> mark1Marks = mark1.square.getMarks();
-        List<Mark> mark2Marks = mark2.square.getMarks();
+        //List<Mark> mark1Marks = mark1.square.getMarks();
+        //List<Mark> mark2Marks = mark2.square.getMarks();
 
-        foreach (Mark m in mark1Marks)
-        {
-            entGraph.addEdge(s, m.sm);
-        }
-        mark1.square.addPresentMark(mark1);
+        //foreach (Mark m in mark1Marks)
+        //{
+        //    entGraph.addEdge(s, m.sm);
+        //}
+        //mark1.square.addPresentMark(mark1);
 
-        foreach (Mark m in mark2Marks)
-        {
-            entGraph.addEdge(s, m.sm);
-        }
-        mark2.square.addPresentMark(mark2);
+        //foreach (Mark m in mark2Marks)
+        //{
+        //    entGraph.addEdge(s, m.sm);
+        //}
+        //mark2.square.addPresentMark(mark2);
 
         entGraph.addEdgeSQ(mark1.square, mark2.square);
 
@@ -75,10 +77,16 @@ public class Board : MonoBehaviour
             {
                 Debug.Log(sq.ToString());
             }
-        }
-        else
+            return s;
+        } else
         {
             Debug.Log("cycle not detected");
+            return null;
         }
+    }
+
+    public void collapse(int position)
+    {
+
     }
 }

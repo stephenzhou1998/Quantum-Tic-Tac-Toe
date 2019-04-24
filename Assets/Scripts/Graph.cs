@@ -65,6 +65,14 @@ public class Graph : MonoBehaviour
         }
     }
 
+    public void printSetSQ(HashSet<Square> visited)
+    {
+        foreach (Square sq in visited)
+        {
+            Debug.Log(sq.ToString());
+        }
+    }
+
     public HashSet<SpookyMark> getCycle(SpookyMark i){
         Debug.Log("detecting if there's a cycle starting from SpookyMark: " + i.ToString());
         HashSet<SpookyMark> visited = new HashSet<SpookyMark>();
@@ -83,7 +91,11 @@ public class Graph : MonoBehaviour
         HashSet<Square> visited = new HashSet<Square>();
         if (dfsSQ(i, visited, null))
         {
-            return visited;
+            HashSet<Square> newVisited = new HashSet<Square>(visited);
+            foreach (Square j in visited){
+                dfsComplete(j, newVisited, null);
+            }
+            return newVisited;
         }
         return null;
     }
@@ -116,7 +128,18 @@ public class Graph : MonoBehaviour
 
     public bool dfsSQ(Square i, HashSet<Square> visited, Square parent)
     {
+        //Debug.Log("Processing " + i.ToString() + ", visited contains: ");
+        //printSetSQ(visited);
+        //if (parent != null)
+        //{
+        //    Debug.Log("Parent is " + parent.ToString());
+        //} else
+        //{
+        //    Debug.Log("No parent");
+        //}
         visited.Add(i);
+        //Debug.Log("Adjacency list of " + i.ToString() + ": ");
+        //printSetSQ(adjlistSQ[i]);
         foreach (Square j in adjlistSQ[i])
         {
             if (visited.Contains(j))
@@ -125,6 +148,23 @@ public class Graph : MonoBehaviour
                 {
                     return true;
                 }
+                continue;
+            }
+            else if (dfsSQ(j, visited, i))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public bool dfsComplete(Square i, HashSet<Square> visited, Square parent)
+    {
+        visited.Add(i);
+        foreach (Square j in adjlistSQ[i])
+        {
+            if (visited.Contains(j))
+            {
                 continue;
             }
             else if (dfsSQ(j, visited, i))

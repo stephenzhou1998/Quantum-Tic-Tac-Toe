@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class GameManager : MonoBehaviour
     private List<Mark> currentSpookyMark;
     public GameObject board;
     public Text playerTurn;
+    public TextMeshProUGUI collapseText;
+    public GameObject collapseButtons;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,6 +22,8 @@ public class GameManager : MonoBehaviour
         turnNum = 1;
         numMarks = 0;
         playerTurn.text = "Player " + currentPlayer.ToString() + "'s turn";
+        collapseText.text = "";
+        collapseButtons.SetActive(false);
         currentSpookyMark = new List<Mark>();
     }
 
@@ -49,6 +54,8 @@ public class GameManager : MonoBehaviour
 
     public void nextTurn()
     {
+        int lastPlayer = currentPlayer;
+        int lastTurn = turnNum;
         if (currentPlayer == 1)
         {
             currentPlayer = 2;
@@ -62,8 +69,32 @@ public class GameManager : MonoBehaviour
         {
             square.gameObject.GetComponent<Square>().reset();
         }
-        board.GetComponent<Board>().addSpookyMark(currentSpookyMark[0], currentSpookyMark[1]);
+        SpookyMark s = board.GetComponent<Board>().addSpookyMark(currentSpookyMark[0], currentSpookyMark[1]);
+        if (s != null)
+        {
+            collapse(lastPlayer, lastTurn, s);
+        }
         currentSpookyMark = new List<Mark>();
         numMarks = 0;
+    }
+
+    public void collapse(int player, int turn, SpookyMark sm)
+    {
+        string p = "";
+        if (player == 1)
+        {
+            p = "X";
+        } else if (player == 2)
+        {
+            p = "O";
+        }
+        foreach (Transform square in board.transform)
+        {
+            square.gameObject.GetComponent<Square>().disableButton();
+        }
+        collapseText.text = "Select which square to collapse " + p + "<sub>" + turn.ToString() + "</sub>" + " into:";
+        collapseButtons.SetActive(true);
+        collapseButtons.transform.Find("Button1").Find("Text").GetComponent<Text>().text = "Square " + sm.position1;
+        collapseButtons.transform.Find("Button2").Find("Text").GetComponent<Text>().text = "Square " + sm.position2;
     }
 }

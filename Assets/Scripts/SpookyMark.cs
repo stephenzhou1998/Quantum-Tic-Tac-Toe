@@ -6,8 +6,8 @@ public class SpookyMark
 {
 	int player;
 	int turn;
-	int position1;
-	int position2;
+	public int position1;
+	public int position2;
 	int finalPosition;
     Mark mark1;
     Mark mark2;

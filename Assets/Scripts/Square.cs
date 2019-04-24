@@ -89,4 +89,14 @@ public class Square : MonoBehaviour
     {
         alreadyMarked = false;
     }
+
+    public void disableButton()
+    {
+        innerSquares.GetComponent<Button>().enabled = false;
+    }
+
+    public void enableButton()
+    {
+        innerSquares.GetComponent<Button>().enabled = true;
+    }
 }
