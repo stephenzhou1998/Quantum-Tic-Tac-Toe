@@ -30,6 +30,11 @@ public class Square : MonoBehaviour
         
     }
 
+    public override string ToString()
+    {
+        return "Square " + position.ToString();
+    }
+
     public void addMark()
     {
         int numMarks = gameManager.getNumMarks();

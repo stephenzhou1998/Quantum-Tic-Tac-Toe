@@ -6,18 +6,21 @@ public class Graph : MonoBehaviour
 
 {
     private Dictionary<SpookyMark, HashSet<SpookyMark>> adjlist;
+    private Dictionary<Square, HashSet<Square>> adjlistSQ;
     int numVertices;
     int numEdges;
 
     public Graph()
     {
         this.adjlist = new Dictionary<SpookyMark, HashSet<SpookyMark>>();
+        this.adjlistSQ = new Dictionary<Square, HashSet<Square>>();
     }
 
     public Graph(int numEdges, int numVertices){
         this.numEdges = numEdges;
         this.numVertices = numVertices;
         this.adjlist = new Dictionary<SpookyMark, HashSet<SpookyMark>>();
+        this.adjlistSQ = new Dictionary<Square, HashSet<Square>>();
     }
 
     public void addVertex(SpookyMark v)
@@ -40,6 +43,20 @@ public class Graph : MonoBehaviour
         //printSet(adjlist[u]);
     }
 
+    public void addEdgeSQ(Square u, Square v)
+    {
+        HashSet<Square> m = null;
+        if(!adjlistSQ.TryGetValue(u, out m)){
+            adjlistSQ[u] = new HashSet<Square>();
+        }
+        adjlistSQ[u].Add(v);
+        if (!adjlistSQ.TryGetValue(v, out m))
+        {
+            adjlistSQ[v] = new HashSet<Square>();
+        }
+        adjlistSQ[v].Add(u);
+    }
+
     public void printSet(HashSet<SpookyMark> visited)
     {
         foreach (SpookyMark sm in visited)
@@ -55,6 +72,17 @@ public class Graph : MonoBehaviour
             //foreach (SpookyMark j in visited){
             //    dfs(j,visited, null);
             //}
+            return visited;
+        }
+        return null;
+    }
+
+    public HashSet<Square> getCycleSQ(Square i)
+    {
+        Debug.Log("detecting if there's a cycle starting from " + i.ToString());
+        HashSet<Square> visited = new HashSet<Square>();
+        if (dfsSQ(i, visited, null))
+        {
             return visited;
         }
         return null;
@@ -86,6 +114,27 @@ public class Graph : MonoBehaviour
         return false;
     }
 
+    public bool dfsSQ(Square i, HashSet<Square> visited, Square parent)
+    {
+        visited.Add(i);
+        foreach (Square j in adjlistSQ[i])
+        {
+            if (visited.Contains(j))
+            {
+                if (!j.Equals(parent))
+                {
+                    return true;
+                }
+                continue;
+            }
+            else if (dfsSQ(j, visited, i))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public bool removeCycle(SpookyMark v){
        
         if(getCycle(v) != null){
@@ -97,6 +146,20 @@ public class Graph : MonoBehaviour
         return false;
 
     }
+
+    public bool removeCycleSQ(Square v)
+    {
+        if (getCycleSQ(v) != null)
+        {
+            foreach (Square j in getCycleSQ(v))
+            {
+                deleteEdgeSQ(v, j);
+            }
+            return true;
+        }
+        return false;
+    }
+
     public void deleteEdge(SpookyMark u, SpookyMark v){
         if(adjlist[u].Contains(v)){
             adjlist[u].Remove(v);
@@ -105,8 +168,18 @@ public class Graph : MonoBehaviour
         if(adjlist[v].Contains(u)){
             adjlist[v].Remove(u);
         }
-        
-
     }
 
+    public void deleteEdgeSQ(Square u, Square v)
+    {
+        if (adjlistSQ[u].Contains(v))
+        {
+            adjlistSQ[u].Remove(v);
+        }
+
+        if (adjlistSQ[v].Contains(u))
+        {
+            adjlistSQ[v].Remove(u);
+        }
+    }
 }

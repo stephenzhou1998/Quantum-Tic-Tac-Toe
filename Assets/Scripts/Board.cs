@@ -5,7 +5,7 @@ using UnityEngine;
 public class Board : MonoBehaviour
 {
     Graph entGraph;
-    List<Square> squares;
+    Square[] squares;
     List<SpookyMark> spookyMarks;
 
     private GameManager gameManager;
@@ -14,11 +14,12 @@ public class Board : MonoBehaviour
     {
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
         entGraph = new Graph();
-        squares = new List<Square>();
+        squares = new Square[9];
         spookyMarks = new List<SpookyMark>();
+        int i = 0;
         foreach (Transform square in transform)
         {
-            squares.Add(square.gameObject.GetComponent<Square>());
+            squares[i] = square.gameObject.GetComponent<Square>();
         }
     }
 
@@ -49,15 +50,33 @@ public class Board : MonoBehaviour
         }
         mark2.square.addPresentMark(mark2);
 
-        HashSet<SpookyMark> cycle = entGraph.getCycle(s);
-        if (cycle != null)
+        entGraph.addEdgeSQ(mark1.square, mark2.square);
+
+        // Finds cycles based on connections between Spooky Marks (buggy)
+        //HashSet<SpookyMark> cycle = entGraph.getCycle(s);
+        //if (cycle != null)
+        //{
+        //    Debug.Log("cycle detected: ");
+        //    foreach (SpookyMark sm in cycle)
+        //    {
+        //        Debug.Log(sm.ToString());
+        //    }
+        //} else
+        //{
+        //    Debug.Log("cycle not detected");
+        //}
+
+        // Finds cycles based on connections between squares (probably the better way)
+        HashSet<Square> sqCycle = entGraph.getCycleSQ(mark1.square);
+        if (sqCycle != null)
         {
             Debug.Log("cycle detected: ");
-            foreach (SpookyMark sm in cycle)
+            foreach (Square sq in sqCycle)
             {
-                Debug.Log(sm.ToString());
+                Debug.Log(sq.ToString());
             }
-        } else
+        }
+        else
         {
             Debug.Log("cycle not detected");
         }
