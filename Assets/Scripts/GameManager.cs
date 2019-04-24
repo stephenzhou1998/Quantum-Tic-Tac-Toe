@@ -108,4 +108,17 @@ public class GameManager : MonoBehaviour
         collapseButtons.SetActive(false);
     }
 
+    public void win(int player)
+    {
+        playerTurn.text = "Player " + player.ToString() + " wins!";
+        foreach (Transform square in board.transform)
+        {
+            square.gameObject.GetComponent<Square>().disableButton();
+        }
+    }
+
+    public void resetGame()
+    {
+        SceneManager.LoadScene("SampleScene");
+    }
 }

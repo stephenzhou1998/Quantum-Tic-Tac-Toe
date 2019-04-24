@@ -13,7 +13,9 @@ public class Square : MonoBehaviour
     public GameObject O;
     public int position;
     private bool alreadyMarked;
-    private bool classicallyMarked;
+    public bool classicallyMarked;
+    public int finalPlayer;
+    public int finalTurn;
     private int filledMarks;
     public List<Mark> presentMarks;
 
@@ -25,6 +27,8 @@ public class Square : MonoBehaviour
         presentMarks = new List<Mark>();
         alreadyMarked = false;
         classicallyMarked = false;
+        finalPlayer = 0;
+        finalTurn = 0;
     }
 
     public Square()
@@ -73,16 +77,19 @@ public class Square : MonoBehaviour
         }
         toAdd.GetComponent<TextMeshProUGUI>().text = restore;
         Mark mark = new Mark(player, turn, position, this);
+        presentMarks.Add(mark);
         alreadyMarked = true;
         gameManager.addMark(mark);
     }
 
-    public void setBigMark(GameObject toAdd, string restore)
+    public void setBigMark(GameObject toAdd, string restore, int player, int turn)
     {
         transform.Find("InnerSquares").gameObject.SetActive(false);
         Instantiate(toAdd, transform.Find("BigSlot"));
         toAdd.GetComponent<TextMeshProUGUI>().text = restore;
         classicallyMarked = true;
+        finalPlayer = player;
+        finalTurn = turn;
     }
 
     public List<Mark> getMarks()

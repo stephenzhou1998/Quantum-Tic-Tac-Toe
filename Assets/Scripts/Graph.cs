@@ -43,18 +43,26 @@ public class Graph : MonoBehaviour
         //printSet(adjlist[u]);
     }
 
-    public void addEdgeSQ(Square u, Square v)
+    // Returns true if there is a cycle
+    public bool addEdgeSQ(Square u, Square v)
     {
         HashSet<Square> m = null;
         if(!adjlistSQ.TryGetValue(u, out m)){
             adjlistSQ[u] = new HashSet<Square>();
         }
-        adjlistSQ[u].Add(v);
         if (!adjlistSQ.TryGetValue(v, out m))
         {
             adjlistSQ[v] = new HashSet<Square>();
         }
+
+        // Two Square cycle case
+        if (adjlistSQ[u].Contains(v) && adjlistSQ[v].Contains(u))
+        {
+            return true;
+        }
+        adjlistSQ[u].Add(v);
         adjlistSQ[v].Add(u);
+        return false;
     }
 
     public void printSet(HashSet<SpookyMark> visited)
