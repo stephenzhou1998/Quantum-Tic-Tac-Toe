@@ -16,7 +16,7 @@ public class Square : MonoBehaviour
     public bool classicallyMarked;
     public int finalPlayer;
     public int finalTurn;
-    private int filledMarks;
+    public int filledMarks;
     public List<Mark> presentMarks;
 
     // Start is called before the first frame update

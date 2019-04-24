@@ -12,6 +12,7 @@ public class Board : MonoBehaviour
     public SpookyMark toCollapse;
     public GameObject bigX;
     public GameObject bigO;
+    public int nextAction; // 0: next player should place a spooky mark. 1: next player should pick a square to collapse.
     private GameManager gameManager;
 
     // Start is called before the first frame update

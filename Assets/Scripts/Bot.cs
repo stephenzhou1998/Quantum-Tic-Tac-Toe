@@ -6,23 +6,25 @@ using System.Linq;
 public class Bot : MonoBehaviour
 {
     public int difficulty;
-    private GameObject hidden;
+    private Transform hidden;
+    private GameManager gameManager;
 
     // Start is called before the first frame update
     void Start()
     {
-        hidden = GameObject.Find("Hidden");
+        hidden = GameObject.Find("Hidden").transform;
+        gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
     }
 
 
-    public Action getNextMove(Board board,int actionType,int difficulty)
+    public Action getNextMove(Board board, int actionType, int difficulty)
     {   
-        List<Action> legalmoves = getallmoves(board,1); // 1 means bot
+        List<Action> legalmoves = getLegalActions(board, actionType, 1); // 1 means bot
         List<int> Scores = new List<int>();
         
         foreach (Action i in legalmoves) {
             if(i.actionType == actionType){
-                Board copy = Instantiate(board);
+                Board copy = Instantiate(board, hidden);
                 Scores.Add(evalMove(i,copy,1,difficulty));
             }
         }
@@ -35,20 +37,16 @@ public class Bot : MonoBehaviour
         // Perform tree search for best strategy
     }
 
-    public List<Action> getallmoves(Board board, int current)
-    {
-        return null;
-    }
-
     public Action getNextMoveopponent(Board board,int actionType,int difficulty)
     {   
-        List<Action> legalmoves = getallmoves(board,0); // 0 means opponent
+        List<Action> legalmoves = getLegalActions(board, actionType, 0); // 0 means opponent
         List<int> Scores = new List<int>();
 
         
         foreach (Action i in legalmoves){
-            if(i.actionType == actionType){
-                Board copy = Instantiate(board);
+            if(i.actionType == actionType)
+            {
+                Board copy = Instantiate(board, hidden);
                 Scores.Add(evalMove(i,copy,0,difficulty));
             }
         }
@@ -79,10 +77,11 @@ public class Bot : MonoBehaviour
         return 0;
     }
 
-    private List<Action> getLegalActions(Board board, int actionType, int agent, int turnNum)
+    private List<Action> getLegalActions(Board board, int actionType, int agent)
     {
         // Generate all possible actions
         List<Action> result = new List<Action>();
+        int turnNum = gameManager.getTurnNum();
 
         if (actionType == 1) 
         {
@@ -107,7 +106,7 @@ public class Bot : MonoBehaviour
         for (int i=0; i<9; i++)
         {
             Square sq = board.squares[i];
-            if (!sq.classicallyMarked)
+            if (!sq.classicallyMarked && sq.filledMarks < 8)
             {
                 validSquares.Add(sq);
             }
