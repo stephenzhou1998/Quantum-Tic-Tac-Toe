@@ -5,60 +5,91 @@ using UnityEngine;
 public class Graph : MonoBehaviour
 
 {
-    private Dictionary<Mark,HashSet<Mark>> adjlist;
+    private Dictionary<SpookyMark, HashSet<SpookyMark>> adjlist;
     int numVertices;
     int numEdges;
 
     public Graph()
     {
-        this.adjlist = new Dictionary<Mark, HashSet<Mark>>();
+        this.adjlist = new Dictionary<SpookyMark, HashSet<SpookyMark>>();
     }
 
     public Graph(int numEdges, int numVertices){
         this.numEdges = numEdges;
         this.numVertices = numVertices;
-        this.adjlist = new Dictionary<Mark, HashSet<Mark>>();
+        this.adjlist = new Dictionary<SpookyMark, HashSet<SpookyMark>>();
     }
 
-    public void addEdge(Mark u, Mark v){
-        if(adjlist[u] == null){
-            adjlist[u] = new HashSet<Mark>();
-        }
-        adjlist[u].Add(v);
-        if(adjlist[v] == null){
-            adjlist[v] = new HashSet<Mark>();
-        }
-        adjlist[v].Add(u);
-
+    public void addVertex(SpookyMark v)
+    {
+        adjlist[v] = new HashSet<SpookyMark>();
     }
     
-    public HashSet<Mark> getCycle(Mark i){
-        HashSet<Mark> visited = new HashSet<Mark>();
-        if(dfs(i,visited) == true){
-            foreach (Mark j in visited){
-                dfs(j,visited);
-            }
+    public void addEdge(SpookyMark u, SpookyMark v){
+        //HashSet<Mark> m = null;
+        //if(!adjlist.TryGetValue(u, out m)){
+        //    adjlist[u] = new HashSet<Mark>();
+        //}
+        //Debug.Log("Making edge between " + u.ToString() + " and " + v.ToString());
+        adjlist[u].Add(v);
+        //if(!adjlist.TryGetValue(v, out m)){
+        //    adjlist[v] = new HashSet<Mark>();
+        //}
+        adjlist[v].Add(u);
+        //Debug.Log("adjacency list of " + u.ToString() + " contains:");
+        //printSet(adjlist[u]);
+    }
+
+    public void printSet(HashSet<SpookyMark> visited)
+    {
+        foreach (SpookyMark sm in visited)
+        {
+            Debug.Log(sm.ToString());
+        }
+    }
+
+    public HashSet<SpookyMark> getCycle(SpookyMark i){
+        Debug.Log("detecting if there's a cycle starting from SpookyMark: " + i.ToString());
+        HashSet<SpookyMark> visited = new HashSet<SpookyMark>();
+        if(dfs(i,visited, null)) {
+            //foreach (SpookyMark j in visited){
+            //    dfs(j,visited, null);
+            //}
             return visited;
         }
         return null;
     }
-    public bool dfs(Mark i, HashSet<Mark> visited){
-        if(visited.Contains(i)){
-            return true;
-        }else{
-            visited.Add(i);
-            foreach (Mark j in adjlist[i]){
-                dfs(j,visited);
+
+    public bool dfs(SpookyMark i, HashSet<SpookyMark> visited, SpookyMark parent)
+    {
+        //Debug.Log("Processing " + i.ToString() + ", visited contains: ");
+        //printSet(visited);
+        //if (visited.Contains(i)){
+        //    return true;
+        //} else {}
+        visited.Add(i);
+        //Debug.Log("Adjacency list of " + i.ToString() + ": ");
+        //printSet(adjlist[i]);
+        foreach (SpookyMark j in adjlist[i]) {
+            if (visited.Contains(j))
+            {
+                if (!j.Equals(parent))
+                {
+                    return true;
+                }
+                continue;
+            } else if (dfs(j, visited, i))
+            {
+                return true;
             }
-            return false;
         }
-        
+        return false;
     }
 
-    public bool removeCycle(Mark v){
+    public bool removeCycle(SpookyMark v){
        
         if(getCycle(v) != null){
-            foreach (Mark j in getCycle(v)){
+            foreach (SpookyMark j in getCycle(v)){
                 deleteEdge(v,j);
             }
             return true;
@@ -66,7 +97,7 @@ public class Graph : MonoBehaviour
         return false;
 
     }
-    public void deleteEdge(Mark u, Mark v){
+    public void deleteEdge(SpookyMark u, SpookyMark v){
         if(adjlist[u].Contains(v)){
             adjlist[u].Remove(v);
         }

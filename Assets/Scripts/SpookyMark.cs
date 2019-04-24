@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpookyMark : MonoBehaviour
+public class SpookyMark
 {
 	int player;
 	int turn;
@@ -33,7 +33,7 @@ public class SpookyMark : MonoBehaviour
 		this.finalized = true;
 	}
 
-    public string ToString()
+    public override string ToString()
     {
         return string.Format("Player {0}, Turn {1}: ({2}, {3})", player, turn, position1, position2);
     }
@@ -42,4 +42,15 @@ public class SpookyMark : MonoBehaviour
 	{
 		return this.finalized;
 	}
+
+    public override bool Equals(object obj)
+    {
+        SpookyMark sm = (SpookyMark) obj;
+        return player == sm.player && turn == sm.turn && position1 == sm.position1 && position2 == sm.position2;
+    }
+
+    public override int GetHashCode()
+    {
+        return base.GetHashCode();
+    }
 }

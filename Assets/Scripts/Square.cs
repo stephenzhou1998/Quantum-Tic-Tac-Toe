@@ -65,10 +65,19 @@ public class Square : MonoBehaviour
             }
         }
         toAdd.GetComponent<TextMeshProUGUI>().text = restore;
-        Mark mark = new Mark(player, turn, position);
-        presentMarks.Add(mark);
+        Mark mark = new Mark(player, turn, position, this);
         alreadyMarked = true;
         gameManager.addMark(mark);
+    }
+
+    public List<Mark> getMarks()
+    {
+        return presentMarks;
+    }
+
+    public void addPresentMark(Mark mark)
+    {
+        presentMarks.Add(mark);
     }
 
     public void reset()
