@@ -22,7 +22,7 @@ public class Bot : MonoBehaviour
         for(Action i:legalmoves){
             if(i.actionType == actionType){
                 Board copy = Board.copy(board);
-                Scores.add(evalMove(i,copy,1));
+                Scores.add(evalMove(i,copy,1,difficulty));
             }
         }
         int max = max(Scores);
