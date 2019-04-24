@@ -97,4 +97,15 @@ public class GameManager : MonoBehaviour
         collapseButtons.transform.Find("Button1").Find("Text").GetComponent<Text>().text = "Square " + sm.position1;
         collapseButtons.transform.Find("Button2").Find("Text").GetComponent<Text>().text = "Square " + sm.position2;
     }
+
+    public void finishCollapse()
+    {
+        foreach (Transform square in board.transform)
+        {
+            square.gameObject.GetComponent<Square>().enableButton();
+        }
+        collapseText.text = "";
+        collapseButtons.SetActive(false);
+    }
+
 }

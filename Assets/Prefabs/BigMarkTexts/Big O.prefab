@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5530523371233658305}
   - component: {fileID: 5530523371233658304}
   m_Layer: 5
-  m_Name: O
+  m_Name: Big O
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -138,17 +138,17 @@ MonoBehaviour:
     textComponent: {fileID: 0}
     characterCount: 2
     spriteCount: 0
-    spaceCount: 0
+    spaceCount: 1
     wordCount: 1
     linkCount: 0
-    lineCount: 2
+    lineCount: 1
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 1
+  m_havePropertiesChanged: 0
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 1
+  m_isInputParsingRequired: 0
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:

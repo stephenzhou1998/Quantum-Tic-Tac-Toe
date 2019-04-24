@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class SpookyMark
 {
-	int player;
-	int turn;
+	public int player;
+	public int turn;
 	public int position1;
 	public int position2;
 	int finalPosition;

@@ -1031,7 +1031,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 1
+  m_Text: 0
 --- !u!1 &7159725580118285686
 GameObject:
   m_ObjectHideFlags: 0
@@ -1085,6 +1085,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   X: {fileID: 5365543520074866607, guid: 6756b9ee826ce774190ab70fa226cc44, type: 3}
   O: {fileID: 725431166116573485, guid: 87c19e334bc31b54f85a78accb306a8a, type: 3}
+  bigX: {fileID: 6763970566297333639, guid: 8e9d626f654d30942b6fc34077608e95, type: 3}
+  bigO: {fileID: 5530523371233658310, guid: 893d7898f988cec4e90465779f07ad80, type: 3}
+  position: 0
   presentMarks: []
 --- !u!1 &7481845924182694222
 GameObject:

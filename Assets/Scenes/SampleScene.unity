@@ -5880,7 +5880,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 1
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -6874,6 +6874,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 495967e2747797e4cb41d58d528281ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bigX: {fileID: 6763970566297333639, guid: 8e9d626f654d30942b6fc34077608e95, type: 3}
+  bigO: {fileID: 5530523371233658310, guid: 893d7898f988cec4e90465779f07ad80, type: 3}
 --- !u!1 &2111365891
 GameObject:
   m_ObjectHideFlags: 0
@@ -6952,7 +6954,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2111365894}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2107732633}
+        m_MethodName: collapse
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &2111365894
@@ -7347,11 +7360,6 @@ PrefabInstance:
     - target: {fileID: 6364710787289349912, guid: 15da59113dc40e045a1c1f39b1b35ed1,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7159725579578883444, guid: 15da59113dc40e045a1c1f39b1b35ed1,
-        type: 3}
-      propertyPath: m_Text
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

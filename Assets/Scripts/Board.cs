@@ -1,14 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Board : MonoBehaviour
 {
     Graph entGraph;
     Square[] squares;
     List<SpookyMark> spookyMarks;
-
+    SpookyMark toCollapse;
+    public GameObject bigX;
+    public GameObject bigO;
     private GameManager gameManager;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,7 +24,9 @@ public class Board : MonoBehaviour
         foreach (Transform square in transform)
         {
             squares[i] = square.gameObject.GetComponent<Square>();
+            i++;
         }
+        toCollapse = null;
     }
 
     public SpookyMark addSpookyMark(Mark mark1, Mark mark2)
@@ -77,6 +83,7 @@ public class Board : MonoBehaviour
             {
                 Debug.Log(sq.ToString());
             }
+            toCollapse = s;
             return s;
         } else
         {
@@ -85,8 +92,35 @@ public class Board : MonoBehaviour
         }
     }
 
-    public void collapse(int position)
+    public void collapse(int mark)
     {
-
+        int position = 0;
+        if (mark == 1)
+        {
+            position = toCollapse.position1;
+        } else if (mark == 2)
+        {
+            position = toCollapse.position2;
+        }
+        int player = toCollapse.player;
+        int turn = toCollapse.turn;
+        toCollapse = null;
+        Square square = squares[position];
+        GameObject toAdd = null;
+        string restore = "";
+        if (player == 1)
+        {
+            toAdd = bigX;
+            restore = "X";
+        }
+        else if (player == 2)
+        {
+            toAdd = bigO;
+            restore = "O";
+        }
+        toAdd.GetComponent<TextMeshProUGUI>().text += "<sub>" + turn.ToString() + "</sub>";
+        square.setBigMark(toAdd, restore);
+        
+        gameManager.finishCollapse();
     }
 }
