@@ -1,15 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class Bot : MonoBehaviour
 {
     public int difficulty;
+    private GameObject hidden;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        hidden = GameObject.Find("Hidden");
     }
 
 
@@ -17,21 +19,25 @@ public class Bot : MonoBehaviour
     {   
         List<Action> legalmoves = getallmoves(board,1); // 1 means bot
         List<int> Scores = new List<int>();
-
         
-        for(Action i:legalmoves){
+        foreach (Action i in legalmoves) {
             if(i.actionType == actionType){
-                Board copy = Board.copy(board);
-                Scores.add(evalMove(i,copy,1,difficulty));
+                Board copy = Instantiate(board);
+                Scores.Add(evalMove(i,copy,1,difficulty));
             }
         }
-        int max = max(Scores);
-        int index = Scores.indexof(max);
+        int max = Scores.Max();
+        int index = Scores.IndexOf(max);
         return legalmoves[index];
 
 
         
         // Perform tree search for best strategy
+    }
+
+    public List<Action> getallmoves(Board board, int current)
+    {
+        return null;
     }
 
     public Action getNextMoveopponent(Board board,int actionType,int difficulty)
@@ -40,14 +46,14 @@ public class Bot : MonoBehaviour
         List<int> Scores = new List<int>();
 
         
-        for(Action i:legalmoves){
+        foreach (Action i in legalmoves){
             if(i.actionType == actionType){
-                Board copy = Board.copy(board);
-                Scores.add(evalMove(i,copy,0,difficulty));
+                Board copy = Instantiate(board);
+                Scores.Add(evalMove(i,copy,0,difficulty));
             }
         }
-        int min = min(Scores);
-        int index = Scores.indexof(min);
+        int min = Scores.Min();
+        int index = Scores.IndexOf(min);
         return legalmoves[index];
 
 
@@ -64,19 +70,19 @@ public class Bot : MonoBehaviour
     public int evalMove(Action move,Board board,int agent,int difficulty){
         double score;
         if(difficulty == 0){
-            return ;
+            return 0;
         }
         if(agent == 1){
-            getNextMoveopponent(Board board,int actionType,int difficulty)
-
+            getNextMoveopponent(board, move.actionType, difficulty);
+            
         }
-
+        return 0;
     }
 
     private List<Action> getLegalActions(Board board, int actionType, int agent, int turnNum)
     {
         // Generate all possible actions
-        List<Action> result = new LinkedList<Action>();
+        List<Action> result = new List<Action>();
 
         if (actionType == 1) 
         {
@@ -97,13 +103,13 @@ public class Bot : MonoBehaviour
 
         // Otherwise we return all the possible spookyMarks to add
         // First find all possible squares we can put marks on.
-        List<Integer> validSquares = new LinkedList<Integer>();
+        List<Square> validSquares = new List<Square>();
         for (int i=0; i<9; i++)
         {
             Square sq = board.squares[i];
             if (!sq.classicallyMarked)
             {
-                validSquares.Add(i);
+                validSquares.Add(sq);
             }
         }
         // If no valid squares, return null

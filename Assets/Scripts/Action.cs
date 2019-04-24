@@ -5,7 +5,7 @@ using UnityEngine;
 public class Action : MonoBehaviour
 {
     // 0 means placing new spookyMarks, 1 means choosing square to collapse
-    int actionType;
+    public int actionType;
     SpookyMark spMark;
     Square sq;
 

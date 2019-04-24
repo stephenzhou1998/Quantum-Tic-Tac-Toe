@@ -6,10 +6,10 @@ using TMPro;
 public class Board : MonoBehaviour
 {
     Graph entGraph;
-    Square[] squares;
+    public Square[] squares;
     List<SpookyMark> spookyMarks;
     List<int> collapsed;
-    SpookyMark toCollapse;
+    public SpookyMark toCollapse;
     public GameObject bigX;
     public GameObject bigO;
     private GameManager gameManager;
