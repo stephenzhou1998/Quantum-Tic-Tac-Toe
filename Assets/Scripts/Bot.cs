@@ -59,23 +59,42 @@ public class Bot : MonoBehaviour
         // Perform tree search for best strategy
     }
 
-    private void evalState(Board board)
-    {
-        // Create leaf node of the search tree
+    private int evalState(Board board){ // return [Xscore,Oscore]
+        int Xscore = evalplayer(Board);
+        int Oscore = - evalplayer(Board);
+        return Xscore + Oscore;
+    }
+
+    private int evalplayer(Board board){ // return Score
+        int score;
+        
+        return score;
     }
     
 
     public int evalMove(Action move,Board board,int agent,int difficulty){
         double score;
         if(difficulty == 0){
-            return ;
+            Board copy = Board.copy(board);
+            copy.makemove(move);
+            score = evalState(copy);
+            return score;
         }
         if(agent == 1){
-            //Board copy = Board.copy(board);
-            //getNextMoveopponent(copy,actionType,difficulty-1);
-            getNextMoveopponent(Board board,int actionType,int difficulty)
+            Board copy = Board.copy(board);
+            copy.makemove(move);
+            Action act = getNextMoveopponent(copy,actionType,0,difficulty-1);
+            copy.makemove(act);
+            return evalState(copy);
 
+        }else if(agent == 0){
+            Board copy = Board.copy(board);
+            copy.makemove(move);
+            Action act = getNextMoveopponent(copy,actionType,1,difficulty-1);
+            copy.makemove(act);
+            return evalState(copy);
         }
+
 
     }
 
