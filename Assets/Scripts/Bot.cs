@@ -180,6 +180,27 @@ public class Bot : MonoBehaviour
             }
     }
 
+    private List<int> getNeighbor(int sq)
+    {
+        // return a list of indices of squares that are neighbors of sq
+        int r = sq % 3;
+        int c = sq - 3*r;
+
+        List<int> neighbors = new LinkedList<int>();
+        for (int i=r-1; i<=r+1; i++)
+        {
+            for (int j=c-1; j<=c+1; j++)
+            {
+                int index = 3*i+j;
+                if (index != sq && index >= 0 && index < 9)
+                {
+                    neighbors.Add(index);
+                }
+            }
+        }
+        return neighbors;
+    }
+
     // Update is called once per frame
     void Update()
     {
