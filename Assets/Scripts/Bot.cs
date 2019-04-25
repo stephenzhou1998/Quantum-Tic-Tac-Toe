@@ -90,7 +90,7 @@ public class Bot : MonoBehaviour
         }else if(agent == 0){
             Board copy = Board.copy(board);
             copy.makemove(move);
-            Action act = getNextMoveopponent(copy,actionType,1,difficulty-1);
+            Action act = getNextMove(copy,actionType,1,difficulty-1);
             copy.makemove(act);
             return evalState(copy);
         }
