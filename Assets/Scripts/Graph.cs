@@ -6,7 +6,7 @@ public class Graph : MonoBehaviour
 
 {
     private Dictionary<SpookyMark, HashSet<SpookyMark>> adjlist;
-    private Dictionary<Square, HashSet<Square>> adjlistSQ;
+    public Dictionary<Square, HashSet<Square>> adjlistSQ;
     int numVertices;
     int numEdges;
 

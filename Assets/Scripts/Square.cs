@@ -8,11 +8,11 @@ using TMPro;
 public class Square : MonoBehaviour
 {
     private Transform innerSquares;
-    private GameManager gameManager;
+    public GameManager gameManager;
     public GameObject X;
     public GameObject O;
     public int position;
-    private bool alreadyMarked;
+    public bool alreadyMarked;
     public bool classicallyMarked;
     public int finalPlayer;
     public int finalTurn;

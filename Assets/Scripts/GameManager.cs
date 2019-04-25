@@ -7,14 +7,16 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
-    private int currentPlayer;
-    private int turnNum;
-    private int numMarks;
-    private List<Mark> currentSpookyMark;
+    public int currentPlayer;
+    public int turnNum;
+    public int numMarks;
+    public List<Mark> currentSpookyMark;
     public GameObject board;
     public Text playerTurn;
     public TextMeshProUGUI collapseText;
     public GameObject collapseButtons;
+    public bool won;
+    public bool draw;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,6 +27,8 @@ public class GameManager : MonoBehaviour
         collapseText.text = "";
         collapseButtons.SetActive(false);
         currentSpookyMark = new List<Mark>();
+        won = false;
+        draw = false;
     }
 
     public int getCurrentPlayer()
@@ -115,6 +119,17 @@ public class GameManager : MonoBehaviour
         {
             square.gameObject.GetComponent<Square>().disableButton();
         }
+        won = true;
+    }
+
+    public void noWinner()
+    {
+        playerTurn.text = "Draw!";
+        foreach (Transform square in board.transform)
+        {
+            square.gameObject.GetComponent<Square>().disableButton();
+        }
+        draw = true;
     }
 
     public void resetGame()

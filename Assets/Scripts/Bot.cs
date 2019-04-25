@@ -8,23 +8,34 @@ public class Bot : MonoBehaviour
     public int difficulty;
     private Transform hidden;
     private GameManager gameManager;
+    public Board actualBoard;
+    public int currentTurn;
 
     // Start is called before the first frame update
     void Start()
     {
         hidden = GameObject.Find("Hidden").transform;
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
+        currentTurn = 2;
     }
 
+    private BoardBot generateSuccessor(Board board, int agent, Action action)
+    {
+        BoardBot copy = new BoardBot(board);
+        GameManagerBot gmCopy = new GameManagerBot(board.gameManager);
+        copy.gameManager = gmCopy;
+        action.performAction(copy);
+        return copy;
+    }
 
-    public Action getNextMove(Board board, int actionType, int difficulty)
+    public Action getNextMove(BoardBot board, int actionType, int difficulty)
     {   
-        List<Action> legalmoves = getLegalActions(board, actionType, 1); // 1 means bot
+        List<Action> legalmoves = getLegalActions(board, actionType, 1, currentTurn); // 1 means bot
         List<int> Scores = new List<int>();
         
         foreach (Action i in legalmoves) {
             if(i.actionType == actionType){
-                Board copy = Instantiate(board, hidden);
+                BoardBot copy = board.shallowCopy();
                 Scores.Add(evalMove(i,copy,1,difficulty));
             }
         }
@@ -37,16 +48,16 @@ public class Bot : MonoBehaviour
         // Perform tree search for best strategy
     }
 
-    public Action getNextMoveopponent(Board board,int actionType,int difficulty)
+    public Action getNextMoveopponent(BoardBot board,int actionType,int difficulty)
     {   
-        List<Action> legalmoves = getLegalActions(board, actionType, 0); // 0 means opponent
+        List<Action> legalmoves = getLegalActions(board, actionType, 0, currentTurn); // 0 means opponent
         List<int> Scores = new List<int>();
 
         
         foreach (Action i in legalmoves){
             if(i.actionType == actionType)
             {
-                Board copy = Instantiate(board, hidden);
+                BoardBot copy = board.shallowCopy();
                 Scores.Add(evalMove(i,copy,0,difficulty));
             }
         }
@@ -59,13 +70,13 @@ public class Bot : MonoBehaviour
         // Perform tree search for best strategy
     }
 
-    private void evalState(Board board)
+    private void evalState(BoardBot board)
     {
         // Create leaf node of the search tree
     }
     
 
-    public int evalMove(Action move,Board board,int agent,int difficulty){
+    public int evalMove(Action move, BoardBot board,int agent,int difficulty) {
         double score;
         if(difficulty == 0){
             return 0;
@@ -77,16 +88,15 @@ public class Bot : MonoBehaviour
         return 0;
     }
 
-    private List<Action> getLegalActions(Board board, int actionType, int agent)
+    private List<Action> getLegalActions(BoardBot board, int actionType, int agent, int turnNum)
     {
         // Generate all possible actions
         List<Action> result = new List<Action>();
-        int turnNum = gameManager.getTurnNum();
 
         if (actionType == 1) 
         {
             // return the two possible squares we can collapse into.
-            SpookyMark sm = board.toCollapse;
+            SpookyMarkBot sm = board.toCollapse;
             if (sm == null)
             {
                 //log error
@@ -102,10 +112,10 @@ public class Bot : MonoBehaviour
 
         // Otherwise we return all the possible spookyMarks to add
         // First find all possible squares we can put marks on.
-        List<Square> validSquares = new List<Square>();
+        List<SquareBot> validSquares = new List<SquareBot>();
         for (int i=0; i<9; i++)
         {
-            Square sq = board.squares[i];
+            SquareBot sq = board.squares[i];
             if (!sq.classicallyMarked && sq.filledMarks < 8)
             {
                 validSquares.Add(sq);
@@ -125,10 +135,7 @@ public class Bot : MonoBehaviour
         {
             int p = agent;
             int t = turnNum;
-            Mark m1 = new Mark(p,t,validSquares[c[0]].position, validSquares[c[0]]);
-            Mark m2 = new Mark(p,t,validSquares[c[1]].position, validSquares[c[1]]);
-            SpookyMark sm = new SpookyMark(m1, m2);
-            result.Add(new Action(sm));
+            result.Add(new Action(c[0], c[1]));
         }
         return result;
     }

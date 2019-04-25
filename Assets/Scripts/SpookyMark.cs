@@ -9,8 +9,8 @@ public class SpookyMark
 	public int position1;
 	public int position2;
 	int finalPosition;
-    Mark mark1;
-    Mark mark2;
+    public Mark mark1;
+    public Mark mark2;
 	private bool finalized;
 
 	public SpookyMark(Mark mark1, Mark mark2)
