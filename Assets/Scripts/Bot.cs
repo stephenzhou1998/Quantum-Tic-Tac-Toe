@@ -5,21 +5,14 @@ using UnityEngine;
 public class Bot : MonoBehaviour
 {
     public int difficulty;
-<<<<<<< HEAD
-=======
     private Transform hidden;
     private GameManager gameManager;
->>>>>>> 08f2c1d76aa5817dacfb5207c4b3372170cf3ef2
 
     // Start is called before the first frame update
     void Start()
     {
-<<<<<<< HEAD
-        
-=======
         hidden = GameObject.Find("Hidden").transform;
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
->>>>>>> 08f2c1d76aa5817dacfb5207c4b3372170cf3ef2
     }
 
 
@@ -31,13 +24,8 @@ public class Bot : MonoBehaviour
         
         for(Action i:legalmoves){
             if(i.actionType == actionType){
-<<<<<<< HEAD
-                Board copy = Board.copy(board);
-                Scores.add(evalMove(i,copy,1,difficulty));
-=======
                 Board copy = Instantiate(board, hidden);
                 Scores.Add(evalMove(i,copy,1,difficulty));
->>>>>>> 08f2c1d76aa5817dacfb5207c4b3372170cf3ef2
             }
         }
         int max = max(Scores);
@@ -94,12 +82,9 @@ public class Bot : MonoBehaviour
     private List<Action> getLegalActions(Board board, int actionType, int agent)
     {
         // Generate all possible actions
-<<<<<<< HEAD
-        List<Action> result = new LinkedList<Action>();
-=======
+
         List<Action> result = new List<Action>();
         int turnNum = gameManager.getTurnNum();
->>>>>>> 08f2c1d76aa5817dacfb5207c4b3372170cf3ef2
 
         if (actionType == 1) 
         {
