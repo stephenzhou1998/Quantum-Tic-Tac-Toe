@@ -5,24 +5,39 @@ using UnityEngine;
 public class Bot : MonoBehaviour
 {
     public int difficulty;
+<<<<<<< HEAD
+=======
+    private Transform hidden;
+    private GameManager gameManager;
+>>>>>>> 08f2c1d76aa5817dacfb5207c4b3372170cf3ef2
 
     // Start is called before the first frame update
     void Start()
     {
+<<<<<<< HEAD
         
+=======
+        hidden = GameObject.Find("Hidden").transform;
+        gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
+>>>>>>> 08f2c1d76aa5817dacfb5207c4b3372170cf3ef2
     }
 
 
-    public Action getNextMove(Board board,int actionType,int difficulty)
+    public Action getNextMove(Board board, int actionType, int difficulty)
     {   
-        List<Action> legalmoves = getallmoves(board,1); // 1 means bot
+        List<Action> legalmoves = getLegalActions(board, actionType, 1); // 1 means bot
         List<int> Scores = new List<int>();
 
         
         for(Action i:legalmoves){
             if(i.actionType == actionType){
+<<<<<<< HEAD
                 Board copy = Board.copy(board);
                 Scores.add(evalMove(i,copy,1,difficulty));
+=======
+                Board copy = Instantiate(board, hidden);
+                Scores.Add(evalMove(i,copy,1,difficulty));
+>>>>>>> 08f2c1d76aa5817dacfb5207c4b3372170cf3ef2
             }
         }
         int max = max(Scores);
@@ -36,14 +51,15 @@ public class Bot : MonoBehaviour
 
     public Action getNextMoveopponent(Board board,int actionType,int difficulty)
     {   
-        List<Action> legalmoves = getallmoves(board,0); // 0 means opponent
+        List<Action> legalmoves = getLegalActions(board, actionType, 0); // 0 means opponent
         List<int> Scores = new List<int>();
 
         
-        for(Action i:legalmoves){
-            if(i.actionType == actionType){
-                Board copy = Board.copy(board);
-                Scores.add(evalMove(i,copy,0,difficulty));
+        foreach (Action i in legalmoves){
+            if(i.actionType == actionType)
+            {
+                Board copy = Instantiate(board, hidden);
+                Scores.Add(evalMove(i,copy,0,difficulty));
             }
         }
         int min = min(Scores);
@@ -75,10 +91,15 @@ public class Bot : MonoBehaviour
 
     }
 
-    private List<Action> getLegalActions(Board board, int actionType, int agent, int turnNum)
+    private List<Action> getLegalActions(Board board, int actionType, int agent)
     {
         // Generate all possible actions
+<<<<<<< HEAD
         List<Action> result = new LinkedList<Action>();
+=======
+        List<Action> result = new List<Action>();
+        int turnNum = gameManager.getTurnNum();
+>>>>>>> 08f2c1d76aa5817dacfb5207c4b3372170cf3ef2
 
         if (actionType == 1) 
         {
@@ -103,7 +124,7 @@ public class Bot : MonoBehaviour
         for (int i=0; i<9; i++)
         {
             Square sq = board.squares[i];
-            if (!sq.classicallyMarked)
+            if (!sq.classicallyMarked && sq.filledMarks < 8)
             {
                 validSquares.Add(i);
             }
