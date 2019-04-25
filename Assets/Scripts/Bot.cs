@@ -65,9 +65,41 @@ public class Bot : MonoBehaviour
         return Xscore + Oscore;
     }
 
-    private int evalplayer(Board board，int agent){ // return Score
-        int score;
-        
+    private int evalplayer(Board board, int agent){ // return Score
+        int score = 0;
+        for (int i=0; i<9; i++)
+        {
+            Square sq = board.squares[i];
+            if (sq.classicallyMarked && sq.finalPlayer != agent)
+            {
+                continue;
+            }
+
+            List<int> neighbors = getNeighbor(i);
+            foreach (int k: neighbors)
+            {
+                int gain = 0;
+                Square neigh = board.squares[k];
+                if (neigh.classicallyMarked && neigh.finalPlayer == agent)
+                {
+                    gain += 20;
+                } else if (neigh.filledMarks == 0)
+                {
+                    gain += 5;
+                } else
+                {
+                    foreach (Mark m: neigh.presentMarks) {
+                        if (m.player == agent) {
+                            gain += 1;
+                        }
+                    }
+                }
+                if (sq.classicallyMarked) {
+                    gain *= 2;
+                }
+                score += gain;
+            }
+        }
         return score;
     }
     
