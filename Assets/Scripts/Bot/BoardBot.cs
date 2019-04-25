@@ -72,7 +72,7 @@ public class BoardBot
         }
     }
 
-    public void checkWin()
+    public int checkWin()
     {
         List<int> winPlayers = new List<int>();
         List<int> winMaxTurns = new List<int>();
@@ -106,31 +106,35 @@ public class BoardBot
             {
                 if (!sq.classicallyMarked)
                 {
-                    return;
+                    return -1;
                 }
             }
             gameManager.noWinner();
-            return;
+            return -1;
         }
         else if (winPlayers.Count == 1)
         {
             gameManager.win(winPlayers[0]);
+            return winPlayers[0] - 1;
         }
         else
         {
             if (winPlayers[0] == winPlayers[1])
             {
                 gameManager.win(winPlayers[0]);
+                return winPlayers[0] - 1;
             }
             else
             {
                 if (winMaxTurns[0] < winMaxTurns[1])
                 {
                     gameManager.win(winPlayers[0]);
+                    return winPlayers[0] - 1;
                 }
                 else if (winMaxTurns[0] > winMaxTurns[1])
                 {
                     gameManager.win(winPlayers[1]);
+                    return winPlayers[1] - 1;
                 }
             }
         }

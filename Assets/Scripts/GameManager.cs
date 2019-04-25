@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     public GameObject collapseButtons;
     public bool won;
     public bool draw;
+    public bool pvb;
     // Start is called before the first frame update
     void Start()
     {
@@ -60,15 +61,31 @@ public class GameManager : MonoBehaviour
     {
         int lastPlayer = currentPlayer;
         int lastTurn = turnNum;
+        bool switchedToBot = false;
+        bool botSwitchedBack = false;
+        string str = "";
         if (currentPlayer == 1)
         {
             currentPlayer = 2;
+            if (pvb)
+            {
+                str = "Bot's turn";
+                switchedToBot = true;
+            } else
+            {
+                str = "Player " + currentPlayer.ToString() + "'s turn";
+            }
         } else if (currentPlayer == 2)
         {
+            if (pvb)
+            {
+                botSwitchedBack = true;
+            }
             currentPlayer = 1;
+            str = "Player " + currentPlayer.ToString() + "'s turn";
         }
         turnNum++;
-        playerTurn.text = "Player " + currentPlayer.ToString() + "'s turn";
+        playerTurn.text = str;
         foreach (Transform square in board.transform)
         {
             square.gameObject.GetComponent<Square>().reset();
@@ -80,6 +97,21 @@ public class GameManager : MonoBehaviour
         }
         currentSpookyMark = new List<Mark>();
         numMarks = 0;
+        if (switchedToBot)
+        {
+            foreach (Transform square in board.transform)
+            {
+                square.gameObject.GetComponent<Square>().disableButton();
+            }
+        }
+
+        if (botSwitchedBack)
+        {
+            foreach (Transform square in board.transform)
+            {
+                square.gameObject.GetComponent<Square>().enableButton();
+            }
+        }
     }
 
     public void collapse(int player, int turn, SpookyMark sm)
