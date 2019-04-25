@@ -12,6 +12,7 @@ public class SpookyMark
     public Mark mark1;
     public Mark mark2;
 	private bool finalized;
+    public bool hello;
 
 	public SpookyMark(Mark mark1, Mark mark2)
 	{
@@ -23,6 +24,7 @@ public class SpookyMark
 		this.position2 = mark2.position;
 		this.finalPosition = -1;
 		this.finalized = false;
+        hello = true;
 	}
 
 	public void setFinal(int pos)

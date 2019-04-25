@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
         currentPlayer = 1;
         turnNum = 1;
         numMarks = 0;
-        playerTurn.text = "Player " + currentPlayer.ToString() + "'s turn";
+        playerTurn.text = "Player X's turn";
         collapseText.text = "";
         collapseButtons.SetActive(false);
         won = false;
@@ -63,7 +63,7 @@ public class GameManager : MonoBehaviour
                 switchedToBot = true;
             } else
             {
-                str = "Player " + currentPlayer.ToString() + "'s turn";
+                str = "Player O's turn";
             }
         } else if (currentPlayer == 2)
         {
@@ -72,7 +72,7 @@ public class GameManager : MonoBehaviour
                 botSwitchedBack = true;
             }
             currentPlayer = 1;
-            str = "Player " + currentPlayer.ToString() + "'s turn";
+            str = "Player X's turn";
         }
         turnNum++;
         playerTurn.text = str;
@@ -145,7 +145,16 @@ public class GameManager : MonoBehaviour
 
     public void win(int player)
     {
-        playerTurn.text = "Player " + player.ToString() + " wins!";
+        string winner = "";
+        if (player == 1)
+        {
+            winner = "X";
+        }
+        if (player == 2)
+        {
+            winner = "O";
+        }
+        playerTurn.text = "Player " + winner + " wins!";
         foreach (Transform square in board.transform)
         {
             square.gameObject.GetComponent<Square>().disableButton();

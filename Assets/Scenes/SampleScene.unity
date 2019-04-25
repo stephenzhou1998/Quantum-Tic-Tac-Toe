@@ -182,7 +182,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Player 1's turn
+  m_Text: Player X's turn
 --- !u!222 &175752348
 CanvasRenderer:
   m_ObjectHideFlags: 0
