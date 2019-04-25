@@ -10,7 +10,6 @@ public class GameManager : MonoBehaviour
     public int currentPlayer;
     public int turnNum;
     public int numMarks;
-    public List<Mark> currentSpookyMark;
     public GameObject board;
     public Text playerTurn;
     public TextMeshProUGUI collapseText;
@@ -20,7 +19,7 @@ public class GameManager : MonoBehaviour
     public bool pvb;
     private Bot bot;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         currentPlayer = 1;
         turnNum = 1;
@@ -28,7 +27,6 @@ public class GameManager : MonoBehaviour
         playerTurn.text = "Player " + currentPlayer.ToString() + "'s turn";
         collapseText.text = "";
         collapseButtons.SetActive(false);
-        currentSpookyMark = new List<Mark>();
         won = false;
         draw = false;
         bot = GameObject.Find("Bot").GetComponent<Bot>();
@@ -42,16 +40,6 @@ public class GameManager : MonoBehaviour
     public int getTurnNum()
     {
         return turnNum;
-    }
-
-    public void addMark(Mark mark)
-    {
-        numMarks++;
-        currentSpookyMark.Add(mark);
-        if (numMarks == 2)
-        {
-            nextTurn();
-        }
     }
 
     public int getNumMarks()
@@ -92,12 +80,11 @@ public class GameManager : MonoBehaviour
         {
             square.gameObject.GetComponent<Square>().reset();
         }
-        SpookyMark s = board.GetComponent<Board>().addSpookyMark(currentSpookyMark[0], currentSpookyMark[1]);
+        SpookyMark s = board.GetComponent<Board>().addSpookyMark();
         if (s != null)
         {
             collapse(lastPlayer, lastTurn, s);
         }
-        currentSpookyMark = new List<Mark>();
         numMarks = 0;
         if (switchedToBot)
         {

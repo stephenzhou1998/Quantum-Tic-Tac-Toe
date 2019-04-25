@@ -9,12 +9,13 @@ public class BoardBot
     List<SpookyMarkBot> spookyMarks;
     List<int> collapsed;
     public SpookyMarkBot toCollapse;
+    public List<MarkBot> currentSpookyMark;
     public int nextAction; // 0: next player should place a spooky mark. 1: next player should pick a square to collapse.
     public GameManagerBot gameManager;
 
     // Start is called before the first frame update
     public void init(GraphBot entGraph, SquareBot[] squares, List<SpookyMarkBot> spookyMarks, 
-        List<int> collapsed, SpookyMarkBot toCollapse, int nextAction, GameManagerBot gameManager)
+        List<int> collapsed, SpookyMarkBot toCollapse, List<MarkBot> currentSpookyMark, int nextAction)
     {
         this.entGraph = entGraph;
         this.squares = squares;
@@ -22,7 +23,6 @@ public class BoardBot
         this.collapsed = collapsed;
         this.toCollapse = toCollapse;
         this.nextAction = nextAction;
-        this.gameManager = gameManager;
     }
 
     public BoardBot shallowCopy()
@@ -36,19 +36,36 @@ public class BoardBot
         SquareBot[] sb = new SquareBot[s.Length];
         for (int i = 0; i < s.Length; i++)
         {
-            sb[i] = new SquareBot(s[i]);
+            sb[i] = new SquareBot(gameManager, s[i]);
         }
         List<SpookyMarkBot> smb = new List<SpookyMarkBot>();
         foreach (SpookyMark sm in b.spookyMarks)
         {
             smb.Add(new SpookyMarkBot(sm));
         }
-        this.init(new GraphBot(b.entGraph), sb, smb, b.collapsed, new SpookyMarkBot(b.toCollapse), b.nextAction,
-            new GameManagerBot(b.gameManager));
+        List<MarkBot> mb = new List<MarkBot>();
+        foreach (Mark m in b.currentSpookyMark)
+        {
+            mb.Add(new MarkBot(m));
+        }
+        this.init(new GraphBot(b.entGraph), sb, smb, b.collapsed, new SpookyMarkBot(b.toCollapse), mb, b.nextAction);
     }
 
-    public SpookyMarkBot addSpookyMark(MarkBot mark1, MarkBot mark2)
+    public void addMark(MarkBot mark)
     {
+        gameManager.numMarks++;
+        currentSpookyMark.Add(mark);
+        if (gameManager.numMarks == 2)
+        {
+            gameManager.nextTurn();
+        }
+    }
+
+    public SpookyMarkBot addSpookyMark()
+    {
+        MarkBot mark1 = currentSpookyMark[0];
+        MarkBot mark2 = currentSpookyMark[1];
+        currentSpookyMark = new List<MarkBot>();
         SpookyMarkBot s = new SpookyMarkBot(mark1, mark2);
         mark1.sm = s;
         mark2.sm = s;

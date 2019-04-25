@@ -1803,9 +1803,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d3fcec011ee72640ba3b395c3da180a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  difficulty: 0
+  startDifficulty: 0
   actualBoard: {fileID: 2107732633}
-  currentTurn: 0
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -3745,6 +3744,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 832760843}
   m_CullTransparentMesh: 0
+--- !u!1 &917519742
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 917519743}
+  m_Layer: 0
+  m_Name: Hidden
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &917519743
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 917519742}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 150.15152, y: 227.84918, z: 2.4541082}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1020761941
 GameObject:
   m_ObjectHideFlags: 0
@@ -3865,7 +3894,6 @@ MonoBehaviour:
   currentPlayer: 0
   turnNum: 0
   numMarks: 0
-  currentSpookyMark: []
   board: {fileID: 2107732630}
   playerTurn: {fileID: 175752347}
   collapseText: {fileID: 832760845}
@@ -4969,6 +4997,11 @@ PrefabInstance:
       propertyPath: position
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 4567239216800078576, guid: 15da59113dc40e045a1c1f39b1b35ed1,
+        type: 3}
+      propertyPath: innerSquares
+      value: 
+      objectReference: {fileID: 1707523872}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 15da59113dc40e045a1c1f39b1b35ed1, type: 3}
 --- !u!224 &1499208379 stripped
@@ -5855,6 +5888,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1696268305}
   m_CullTransparentMesh: 0
+--- !u!224 &1707523872 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1623112965728291540, guid: 15da59113dc40e045a1c1f39b1b35ed1,
+    type: 3}
+  m_PrefabInstance: {fileID: 1499208378}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1711818032
 GameObject:
   m_ObjectHideFlags: 0
@@ -7139,6 +7178,7 @@ MonoBehaviour:
   entGraph: {fileID: 0}
   squares: []
   collapsed: 
+  currentSpookyMark: []
   bigX: {fileID: 6763970566297333639, guid: 8e9d626f654d30942b6fc34077608e95, type: 3}
   bigO: {fileID: 5530523371233658310, guid: 893d7898f988cec4e90465779f07ad80, type: 3}
   nextAction: 0

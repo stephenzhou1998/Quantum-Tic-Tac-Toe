@@ -6,57 +6,112 @@ using System.Linq;
 public class Bot : MonoBehaviour
 {
     public int startDifficulty;
-    private Transform hidden;
     private GameManager gameManager;
     public Board actualBoard;
     // public int currentTurn;
+    private Transform hidden;
 
     // Start is called before the first frame update
     void Start()
     {
-        hidden = GameObject.Find("Hidden").transform;
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
         // currentTurn = 2;
+        hidden = GameObject.Find("Hidden").transform;
     }
 
-    private BoardBot generateSuccessor(Board board, int agent, Action action)
+    private Board generateSuccessor(Board board, int agent, Action action)
     {
-        BoardBot copy = new BoardBot(board);
-        GameManagerBot gmCopy = new GameManagerBot(board.gameManager);
-        copy.gameManager = gmCopy;
-        action.performAction(copy);
-        return copy;
+        action.performAction(board);
+        return board;
     }
 
     public void executeTurn(int actionType, int turnNum)
     {
-        BoardBot copy = new BoardBot(actualBoard);
+        Board copy = Instantiate(actualBoard, hidden);
+        GameManager gmCopy = Instantiate(gameManager, hidden);
+        copy.gameManager = gmCopy;
         Action act = getNextMove(copy, actionType, startDifficulty, turnNum);
+        Destroy(copy);
+        Destroy(gmCopy);
         act.performAction(actualBoard);
     }
 
-    public Action getNextMove(BoardBot board, int actionType, int difficulty, int turnNum)
+    public Action getNextMove(Board board, int actionType, int difficulty, int turnNum)
     {   
         List<Action> legalmoves = getLegalActions(board, actionType, 1, turnNum); // 1 means bot
-        List<double> Scores = new List<double>();
+        List<int> Scores = new List<int>();
 
         
         foreach (Action i in legalmoves){
             if(i.actionType == actionType){
-                BoardBot copy = board.shallowCopy();
-                Scores.Add(evalMove(i,copy,1,difficulty, turnNum));
+                Board successor = generateSuccessor(board, 1, i);
+                Scores.Add(getValue(successor, 1, difficulty));
+                Destroy(successor.gameManager);
+                Destroy(successor);
             }
         }
-        double max = Scores.Max();
+        int max = Scores.Max();
         int index = Scores.IndexOf(max);
         return legalmoves[index];
 
 
-        
+
         // Perform tree search for best strategy
     }
 
-    public Action getNextMoveopponent(BoardBot board,int actionType,int difficulty, int currentTurn)
+    private int getValue(Board board, int agent, int depth)
+    {
+        int winner = board.checkWin();
+        if (winner == 0)
+        {
+            return int.MaxValue;
+        }
+        else if (winner == 1)
+        {
+            return int.MinValue;
+        }
+        else if (depth == 0)
+        {
+            return evalState(board);
+        }
+        if (agent == 0)
+        {
+            return maxValue(board, agent, depth-1);
+        }
+        return minValue(board, agent, depth);
+    }
+
+    private int maxValue(Board board, int agent, int depth)
+    {
+        int v = int.MinValue;
+        foreach (Action action in getLegalActions(board, board.nextAction, agent, 
+            gameManager.getTurnNum() + startDifficulty - depth))
+        {
+            Board successor = generateSuccessor(board, agent, action);
+            int newVal = getValue(successor, (agent + 1) % 2, depth);
+            v = v > newVal ? v : newVal;
+            Destroy(successor.gameManager);
+            Destroy(successor);
+        }
+        return v;
+    }
+
+    private int minValue(Board board, int agent, int depth)
+    {
+        int v = int.MaxValue;
+        foreach (Action action in getLegalActions(board, board.nextAction, agent, 
+            gameManager.getTurnNum() + startDifficulty - depth))
+        {
+            Board successor = generateSuccessor(board, agent, action);
+            int newVal = getValue(successor, (agent + 1) % 2, depth);
+            v = v < newVal ? v : newVal;
+            Destroy(successor.gameManager);
+            Destroy(successor);
+        }
+        return v;
+    }
+
+    public Action getNextMoveopponent(Board board,int actionType,int difficulty, int currentTurn)
     {   
         List<Action> legalmoves = getLegalActions(board, actionType, 0, currentTurn); // 0 means opponent
         List<double> Scores = new List<double>();
@@ -65,7 +120,9 @@ public class Bot : MonoBehaviour
         foreach (Action i in legalmoves){
             if(i.actionType == actionType)
             {
-                BoardBot copy = board.shallowCopy();
+                Board copy = Instantiate(board, hidden);
+                GameManager gmCopy = Instantiate(gameManager, hidden);
+                copy.gameManager = gmCopy;
                 Scores.Add(evalMove(i,copy,0,difficulty, currentTurn));
             }
         }
@@ -78,18 +135,18 @@ public class Bot : MonoBehaviour
         // Perform tree search for best strategy
     }
     
-    private int evalState(BoardBot board){ // return [Xscore,Oscore]
+    private int evalState(Board board){ // return [Xscore,Oscore]
         int Xscore = evalplayer(board,0);
         int Oscore = - evalplayer(board,1);
         return Xscore + Oscore;
     }
   
-    private int evalplayer(BoardBot board, int agent){ // return Score
+    private int evalplayer(Board board, int agent){ // return Score
 
         int score = 0;
         for (int i=0; i<9; i++)
         {
-            SquareBot sq = board.squares[i];
+            Square sq = board.squares[i];
             if (sq.classicallyMarked && sq.finalPlayer != agent)
             {
                 continue;
@@ -99,7 +156,7 @@ public class Bot : MonoBehaviour
             foreach (int k in neighbors)
             {
                 int gain = 0;
-                SquareBot neigh = board.squares[k];
+                Square neigh = board.squares[k];
                 if (neigh.classicallyMarked && neigh.finalPlayer == agent)
                 {
                     gain += 20;
@@ -108,7 +165,7 @@ public class Bot : MonoBehaviour
                     gain += 5;
                 } else
                 {
-                    foreach (MarkBot m in neigh.presentMarks) {
+                    foreach (Mark m in neigh.presentMarks) {
                         if (m.player == agent) {
                             gain += 1;
                         }
@@ -124,32 +181,44 @@ public class Bot : MonoBehaviour
     }
     
 
-    public double evalMove(Action move, BoardBot board,int agent,int difficulty, int currentTurn) {
+    public double evalMove(Action move, Board board,int agent,int difficulty, int currentTurn) {
         double score;
         if(difficulty == 0){
-            BoardBot copy = board.shallowCopy();
+            Board copy = Instantiate(board, hidden);
+            GameManager gmCopy = Instantiate(gameManager, hidden);
+            copy.gameManager = gmCopy;
             move.performAction(copy);
             score = evalState(copy);
+            Destroy(copy);
+            Destroy(gmCopy);
             return score;
         }
         if(agent == 1){
-            BoardBot copy = board.shallowCopy();
+            Board copy = Instantiate(board, hidden);
+            GameManager gmCopy = Instantiate(gameManager, hidden);
+            copy.gameManager = gmCopy;
             move.performAction(copy);
             Action act = getNextMoveopponent(copy, move.actionType,difficulty-1, currentTurn);
             act.performAction(copy);
+            Destroy(copy);
+            Destroy(gmCopy);
             return evalState(copy);
 
         }else if(agent == 0){
-            BoardBot copy = board.shallowCopy();
+            Board copy = Instantiate(board, hidden);
+            GameManager gmCopy = Instantiate(gameManager, hidden);
+            copy.gameManager = gmCopy;
             move.performAction(copy);
             Action act = getNextMove(copy,move.actionType,difficulty-1, currentTurn);
             act.performAction(copy);
+            Destroy(copy);
+            Destroy(gmCopy);
             return evalState(copy);
         }
         return 0.0;
     }
 
-    private List<Action> getLegalActions(BoardBot board, int actionType, int agent, int turnNum)
+    private List<Action> getLegalActions(Board board, int actionType, int agent, int turnNum)
     {
         // Generate all possible actions
 
@@ -158,7 +227,7 @@ public class Bot : MonoBehaviour
         if (actionType == 1) 
         {
             // return the two possible squares we can collapse into.
-            SpookyMarkBot sm = board.toCollapse;
+            SpookyMark sm = board.toCollapse;
             if (sm == null)
             {
                 //log error
@@ -177,7 +246,7 @@ public class Bot : MonoBehaviour
         List<int> validSquares = new List<int>();
         for (int i=0; i<9; i++)
         {
-            SquareBot sq = board.squares[i];
+            Square sq = board.squares[i];
             if (!sq.classicallyMarked && sq.filledMarks < 8)
             {
                 validSquares.Add(i);
@@ -196,7 +265,6 @@ public class Bot : MonoBehaviour
         foreach (int[] c in combinations(2, validSquares.Count))
         {
             int p = agent;
-            int t = turnNum;
             result.Add(new Action(c[0], c[1]));
         }
         return result;

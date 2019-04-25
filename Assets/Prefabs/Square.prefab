@@ -1083,11 +1083,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c3cd977ccd270c41a9730bbfc14a43f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  innerSquares: {fileID: 1623112965728291540}
+  gameManager: {fileID: 0}
   X: {fileID: 5365543520074866607, guid: 6756b9ee826ce774190ab70fa226cc44, type: 3}
   O: {fileID: 725431166116573485, guid: 87c19e334bc31b54f85a78accb306a8a, type: 3}
-  bigX: {fileID: 6763970566297333639, guid: 8e9d626f654d30942b6fc34077608e95, type: 3}
-  bigO: {fileID: 5530523371233658310, guid: 893d7898f988cec4e90465779f07ad80, type: 3}
   position: 0
+  alreadyMarked: 0
+  classicallyMarked: 0
+  finalPlayer: 0
+  finalTurn: 0
+  filledMarks: 0
   presentMarks: []
 --- !u!1 &7481845924182694222
 GameObject:

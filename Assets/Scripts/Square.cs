@@ -20,7 +20,7 @@ public class Square : MonoBehaviour
     public List<Mark> presentMarks;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         innerSquares = transform.Find("InnerSquares");
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
@@ -79,7 +79,7 @@ public class Square : MonoBehaviour
         Mark mark = new Mark(player, turn, position, this);
         presentMarks.Add(mark);
         alreadyMarked = true;
-        gameManager.addMark(mark);
+        gameManager.board.GetComponent<Board>().addMark(mark);
     }
 
     public void setBigMark(GameObject toAdd, string restore, int player, int turn)

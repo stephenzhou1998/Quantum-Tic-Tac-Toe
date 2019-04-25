@@ -8,19 +8,17 @@ public class GameManagerBot
 {
     private int currentPlayer;
     private int turnNum;
-    private int numMarks;
-    private List<MarkBot> currentSpookyMark;
+    public int numMarks;
     private bool won;
     private bool draw;
     public BoardBot board;
     // Start is called before the first frame update
-    public void init(int currentPlayer, int turnNum, int numMarks, List<MarkBot> currentSpookyMark,
+    public void init(int currentPlayer, int turnNum, int numMarks,
         bool won, bool draw, BoardBot board)
     {
         this.currentPlayer = currentPlayer;
         this.turnNum = turnNum;
         this.numMarks = numMarks;
-        this.currentSpookyMark = currentSpookyMark;
         this.won = won;
         this.draw = draw;
         this.board = board;
@@ -28,12 +26,8 @@ public class GameManagerBot
 
     public GameManagerBot(GameManager gm)
     {
-        List<MarkBot> l = new List<MarkBot>();
-        foreach (Mark m in gm.currentSpookyMark)
-        {
-            l.Add(new MarkBot(m));
-        }
-        this.init(gm.currentPlayer, gm.turnNum, gm.numMarks, l, gm.won, gm.draw, new BoardBot(gm.board.GetComponent<Board>()));
+        this.init(gm.currentPlayer, gm.turnNum, gm.numMarks, 
+            gm.won, gm.draw, new BoardBot(gm.board.GetComponent<Board>()));
     }
 
     public int getCurrentPlayer()
@@ -44,16 +38,6 @@ public class GameManagerBot
     public int getTurnNum()
     {
         return turnNum;
-    }
-
-    public void addMark(MarkBot mark)
-    {
-        numMarks++;
-        currentSpookyMark.Add(mark);
-        if (numMarks == 2)
-        {
-            nextTurn();
-        }
     }
 
     public int getNumMarks()
@@ -78,8 +62,7 @@ public class GameManagerBot
         {
             square.reset();
         }
-        SpookyMarkBot s = board.addSpookyMark(currentSpookyMark[0], currentSpookyMark[1]);
-        currentSpookyMark = new List<MarkBot>();
+        SpookyMarkBot s = board.addSpookyMark();
         numMarks = 0;
     }
 

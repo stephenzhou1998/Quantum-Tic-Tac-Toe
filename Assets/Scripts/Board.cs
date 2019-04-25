@@ -9,6 +9,7 @@ public class Board : MonoBehaviour
     public Square[] squares;
     public List<SpookyMark> spookyMarks;
     public List<int> collapsed;
+    public List<Mark> currentSpookyMark;
     public SpookyMark toCollapse;
     public GameObject bigX;
     public GameObject bigO;
@@ -16,12 +17,13 @@ public class Board : MonoBehaviour
     public GameManager gameManager;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
         entGraph = new Graph();
         squares = new Square[9];
         spookyMarks = new List<SpookyMark>();
+        currentSpookyMark = new List<Mark>();
         collapsed = new List<int>();
         int i = 0;
         foreach (Transform square in transform)
@@ -32,8 +34,21 @@ public class Board : MonoBehaviour
         toCollapse = null;
     }
 
-    public SpookyMark addSpookyMark(Mark mark1, Mark mark2)
+    public void addMark(Mark mark)
     {
+        gameManager.numMarks++;
+        currentSpookyMark.Add(mark);
+        if (gameManager.numMarks == 2)
+        {
+            gameManager.nextTurn();
+        }
+    }
+
+    public SpookyMark addSpookyMark()
+    {
+        Mark mark1 = currentSpookyMark[0];
+        Mark mark2 = currentSpookyMark[1];
+        currentSpookyMark = new List<Mark>();
         SpookyMark s = new SpookyMark(mark1, mark2);
         mark1.sm = s;
         mark2.sm = s;
@@ -56,7 +71,7 @@ public class Board : MonoBehaviour
         }
     }
 
-    public void checkWin()
+    public int checkWin()
     {
         List<int> winPlayers = new List<int>();
         List<int> winMaxTurns = new List<int>();
@@ -90,26 +105,31 @@ public class Board : MonoBehaviour
             {
                 if (!sq.classicallyMarked)
                 {
-                    return;
+                    return -1;
                 }
             }
             gameManager.noWinner();
-            return;
+            return -1;
         } else if (winPlayers.Count == 1)
         {
             gameManager.win(winPlayers[0]);
+            return winPlayers[0] - 1;
         } else
         {
             if (winPlayers[0] == winPlayers[1])
             {
                 gameManager.win(winPlayers[0]);
+                return winPlayers[0] - 1;
             } else {
                 if (winMaxTurns[0] < winMaxTurns[1])
                 {
                     gameManager.win(winPlayers[0]);
+                    return winPlayers[0] - 1;
                 } else if (winMaxTurns[0] > winMaxTurns[1]) {
                     gameManager.win(winPlayers[1]);
+                    return winPlayers[0] - 1;
                 }
+                return -1;
             }
         }
     }
