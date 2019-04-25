@@ -136,6 +136,7 @@ public class BoardBot
                     gameManager.win(winPlayers[1]);
                     return winPlayers[1] - 1;
                 }
+                return -1;
             }
         }
     }
