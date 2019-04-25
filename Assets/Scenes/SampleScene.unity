@@ -1769,8 +1769,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 439791799}
+  - component: {fileID: 439791800}
   m_Layer: 0
-  m_Name: Hidden
+  m_Name: Bot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1790,6 +1791,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &439791800
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 439791798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d3fcec011ee72640ba3b395c3da180a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  difficulty: 0
+  actualBoard: {fileID: 2107732633}
+  currentTurn: 0
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -3846,10 +3862,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc5465a8537ac7a409dbbcf89490ae39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentPlayer: 0
+  turnNum: 0
+  numMarks: 0
+  currentSpookyMark: []
   board: {fileID: 2107732630}
   playerTurn: {fileID: 175752347}
   collapseText: {fileID: 832760845}
   collapseButtons: {fileID: 1711818032}
+  won: 0
+  draw: 0
+  pvb: 0
 --- !u!1001 &1367318842
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7113,10 +7136,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 495967e2747797e4cb41d58d528281ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  entGraph: {fileID: 0}
   squares: []
+  collapsed: 
   bigX: {fileID: 6763970566297333639, guid: 8e9d626f654d30942b6fc34077608e95, type: 3}
   bigO: {fileID: 5530523371233658310, guid: 893d7898f988cec4e90465779f07ad80, type: 3}
   nextAction: 0
+  gameManager: {fileID: 0}
 --- !u!1 &2111365891
 GameObject:
   m_ObjectHideFlags: 0

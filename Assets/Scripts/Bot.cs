@@ -5,18 +5,18 @@ using System.Linq;
 
 public class Bot : MonoBehaviour
 {
-    public int difficulty;
+    public int startDifficulty;
     private Transform hidden;
     private GameManager gameManager;
     public Board actualBoard;
-    public int currentTurn;
+    // public int currentTurn;
 
     // Start is called before the first frame update
     void Start()
     {
         hidden = GameObject.Find("Hidden").transform;
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
-        currentTurn = 2;
+        // currentTurn = 2;
     }
 
     private BoardBot generateSuccessor(Board board, int agent, Action action)
@@ -28,16 +28,23 @@ public class Bot : MonoBehaviour
         return copy;
     }
 
-    public Action getNextMove(BoardBot board, int actionType, int difficulty)
+    public void executeTurn(int actionType, int turnNum)
+    {
+        BoardBot copy = new BoardBot(actualBoard);
+        Action act = getNextMove(copy, actionType, startDifficulty, turnNum);
+        act.performAction(actualBoard);
+    }
+
+    public Action getNextMove(BoardBot board, int actionType, int difficulty, int turnNum)
     {   
-        List<Action> legalmoves = getLegalActions(board, actionType, 1, currentTurn); // 1 means bot
+        List<Action> legalmoves = getLegalActions(board, actionType, 1, turnNum); // 1 means bot
         List<double> Scores = new List<double>();
 
         
         foreach (Action i in legalmoves){
             if(i.actionType == actionType){
                 BoardBot copy = board.shallowCopy();
-                Scores.Add(evalMove(i,copy,1,difficulty));
+                Scores.Add(evalMove(i,copy,1,difficulty, turnNum));
             }
         }
         double max = Scores.Max();
@@ -49,7 +56,7 @@ public class Bot : MonoBehaviour
         // Perform tree search for best strategy
     }
 
-    public Action getNextMoveopponent(BoardBot board,int actionType,int difficulty)
+    public Action getNextMoveopponent(BoardBot board,int actionType,int difficulty, int currentTurn)
     {   
         List<Action> legalmoves = getLegalActions(board, actionType, 0, currentTurn); // 0 means opponent
         List<double> Scores = new List<double>();
@@ -59,7 +66,7 @@ public class Bot : MonoBehaviour
             if(i.actionType == actionType)
             {
                 BoardBot copy = board.shallowCopy();
-                Scores.Add(evalMove(i,copy,0,difficulty));
+                Scores.Add(evalMove(i,copy,0,difficulty, currentTurn));
             }
         }
         double min = Scores.Min();
@@ -117,7 +124,7 @@ public class Bot : MonoBehaviour
     }
     
 
-    public double evalMove(Action move, BoardBot board,int agent,int difficulty) {
+    public double evalMove(Action move, BoardBot board,int agent,int difficulty, int currentTurn) {
         double score;
         if(difficulty == 0){
             BoardBot copy = board.shallowCopy();
@@ -128,14 +135,14 @@ public class Bot : MonoBehaviour
         if(agent == 1){
             BoardBot copy = board.shallowCopy();
             move.performAction(copy);
-            Action act = getNextMoveopponent(copy, move.actionType,difficulty-1);
+            Action act = getNextMoveopponent(copy, move.actionType,difficulty-1, currentTurn);
             act.performAction(copy);
             return evalState(copy);
 
         }else if(agent == 0){
             BoardBot copy = board.shallowCopy();
             move.performAction(copy);
-            Action act = getNextMove(copy,move.actionType,difficulty-1);
+            Action act = getNextMove(copy,move.actionType,difficulty-1, currentTurn);
             act.performAction(copy);
             return evalState(copy);
         }

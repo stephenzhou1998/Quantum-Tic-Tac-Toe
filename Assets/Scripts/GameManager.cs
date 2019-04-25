@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     public bool won;
     public bool draw;
     public bool pvb;
+    private Bot bot;
     // Start is called before the first frame update
     void Start()
     {
@@ -30,6 +31,7 @@ public class GameManager : MonoBehaviour
         currentSpookyMark = new List<Mark>();
         won = false;
         draw = false;
+        bot = GameObject.Find("Bot").GetComponent<Bot>();
     }
 
     public int getCurrentPlayer()
@@ -103,6 +105,12 @@ public class GameManager : MonoBehaviour
             {
                 square.gameObject.GetComponent<Square>().disableButton();
             }
+            int actionType = 0;
+            if (s != null)
+            {
+                actionType = 1;
+            }
+            bot.executeTurn(actionType, turnNum);
         }
 
         if (botSwitchedBack)
@@ -136,6 +144,10 @@ public class GameManager : MonoBehaviour
 
     public void finishCollapse()
     {
+        if (pvb && currentPlayer == 2)
+        {
+            bot.executeTurn(0, turnNum);
+        }
         foreach (Transform square in board.transform)
         {
             square.gameObject.GetComponent<Square>().enableButton();

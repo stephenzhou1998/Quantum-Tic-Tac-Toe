@@ -28,7 +28,8 @@ public class Action : MonoBehaviour
     {
         if (actionType == 0)
         {
-            
+            board.squares[p1].addMark();
+            board.squares[p2].addMark();
         } else if(actionType == 1)
         {
             SpookyMarkBot toCollapse = board.toCollapse;
@@ -37,6 +38,28 @@ public class Action : MonoBehaviour
             {
                 board.collapse(1);
             } else if (positionToCollapse == toCollapse.position2)
+            {
+                board.collapse(2);
+            }
+        }
+    }
+
+    public void performAction(Board board)
+    {
+        if (actionType == 0)
+        {
+            board.squares[p1].addMark();
+            board.squares[p2].addMark();
+        }
+        else if (actionType == 1)
+        {
+            SpookyMark toCollapse = board.toCollapse;
+            int positionToCollapse = sq.position;
+            if (positionToCollapse == toCollapse.position1)
+            {
+                board.collapse(1);
+            }
+            else if (positionToCollapse == toCollapse.position2)
             {
                 board.collapse(2);
             }
