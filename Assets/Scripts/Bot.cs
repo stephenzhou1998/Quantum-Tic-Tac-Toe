@@ -60,12 +60,12 @@ public class Bot : MonoBehaviour
     }
 
     private int evalState(Board board){ // return [Xscore,Oscore]
-        int Xscore = evalplayer(Board);
-        int Oscore = - evalplayer(Board);
+        int Xscore = evalplayer(Board,0);
+        int Oscore = - evalplayer(Board,1);
         return Xscore + Oscore;
     }
 
-    private int evalplayer(Board board){ // return Score
+    private int evalplayer(Board board，int agent){ // return Score
         int score;
         
         return score;
