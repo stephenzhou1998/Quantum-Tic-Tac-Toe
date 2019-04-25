@@ -1,40 +1,55 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 
-public class Board : MonoBehaviour
+public class BoardBot
 {
-    public Graph entGraph;
-    public Square[] squares;
-    public List<SpookyMark> spookyMarks;
-    public List<int> collapsed;
-    public SpookyMark toCollapse;
-    public GameObject bigX;
-    public GameObject bigO;
+    GraphBot entGraph;
+    public SquareBot[] squares;
+    List<SpookyMarkBot> spookyMarks;
+    List<int> collapsed;
+    public SpookyMarkBot toCollapse;
     public int nextAction; // 0: next player should place a spooky mark. 1: next player should pick a square to collapse.
-    public GameManager gameManager;
+    public GameManagerBot gameManager;
 
     // Start is called before the first frame update
-    void Start()
+    public void init(GraphBot entGraph, SquareBot[] squares, List<SpookyMarkBot> spookyMarks, 
+        List<int> collapsed, SpookyMarkBot toCollapse, int nextAction, GameManagerBot gameManager)
     {
-        gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
-        entGraph = new Graph();
-        squares = new Square[9];
-        spookyMarks = new List<SpookyMark>();
-        collapsed = new List<int>();
-        int i = 0;
-        foreach (Transform square in transform)
-        {
-            squares[i] = square.gameObject.GetComponent<Square>();
-            i++;
-        }
-        toCollapse = null;
+        this.entGraph = entGraph;
+        this.squares = squares;
+        this.spookyMarks = spookyMarks;
+        this.collapsed = collapsed;
+        this.toCollapse = toCollapse;
+        this.nextAction = nextAction;
+        this.gameManager = gameManager;
     }
 
-    public SpookyMark addSpookyMark(Mark mark1, Mark mark2)
+    public BoardBot shallowCopy()
     {
-        SpookyMark s = new SpookyMark(mark1, mark2);
+        return (BoardBot) this.MemberwiseClone();
+    }
+
+    public BoardBot(Board b)
+    {
+        Square[] s = b.squares;
+        SquareBot[] sb = new SquareBot[s.Length];
+        for (int i = 0; i < s.Length; i++)
+        {
+            sb[i] = new SquareBot(s[i]);
+        }
+        List<SpookyMarkBot> smb = new List<SpookyMarkBot>();
+        foreach (SpookyMark sm in b.spookyMarks)
+        {
+            smb.Add(new SpookyMarkBot(sm));
+        }
+        this.init(new GraphBot(b.entGraph), sb, smb, b.collapsed, new SpookyMarkBot(b.toCollapse), b.nextAction,
+            new GameManagerBot(b.gameManager));
+    }
+
+    public SpookyMarkBot addSpookyMark(MarkBot mark1, MarkBot mark2)
+    {
+        SpookyMarkBot s = new SpookyMarkBot(mark1, mark2);
         mark1.sm = s;
         mark2.sm = s;
         spookyMarks.Add(s);
@@ -45,12 +60,13 @@ public class Board : MonoBehaviour
             return s;
         }
 
-        HashSet<Square> sqCycle = entGraph.getCycleSQ(mark1.square);
+        HashSet<SquareBot> sqCycle = entGraph.getCycleSQ(mark1.square);
         if (sqCycle != null)
         {
             toCollapse = s;
             return s;
-        } else
+        }
+        else
         {
             return null;
         }
@@ -86,7 +102,7 @@ public class Board : MonoBehaviour
 
         if (winPlayers.Count == 0)
         {
-            foreach (Square sq in squares)
+            foreach (SquareBot sq in squares)
             {
                 if (!sq.classicallyMarked)
                 {
@@ -95,26 +111,32 @@ public class Board : MonoBehaviour
             }
             gameManager.noWinner();
             return;
-        } else if (winPlayers.Count == 1)
+        }
+        else if (winPlayers.Count == 1)
         {
             gameManager.win(winPlayers[0]);
-        } else
+        }
+        else
         {
             if (winPlayers[0] == winPlayers[1])
             {
                 gameManager.win(winPlayers[0]);
-            } else {
+            }
+            else
+            {
                 if (winMaxTurns[0] < winMaxTurns[1])
                 {
                     gameManager.win(winPlayers[0]);
-                } else if (winMaxTurns[0] > winMaxTurns[1]) {
+                }
+                else if (winMaxTurns[0] > winMaxTurns[1])
+                {
                     gameManager.win(winPlayers[1]);
                 }
             }
         }
     }
 
-    public void checkWinHelper(int a, int b, int c, List<int> winPlayers, List<int>winMaxTurns)
+    public void checkWinHelper(int a, int b, int c, List<int> winPlayers, List<int> winMaxTurns)
     {
         if (squares[a].classicallyMarked && squares[b].classicallyMarked && squares[c].classicallyMarked)
         {
@@ -134,7 +156,8 @@ public class Board : MonoBehaviour
         if (mark == 1)
         {
             position = toCollapse.position1;
-        } else if (mark == 2)
+        }
+        else if (mark == 2)
         {
             position = toCollapse.position2;
         }
@@ -142,9 +165,6 @@ public class Board : MonoBehaviour
         int turn = toCollapse.turn;
         toCollapse = null;
         collapseHelper(position, player, turn);
-        gameManager.finishCollapse();
-        // Might not be necessary
-        // entGraph.removeCycleSQ(squares[position]);
         checkWin();
     }
 
@@ -154,34 +174,21 @@ public class Board : MonoBehaviour
         {
             return;
         }
-        Square square = squares[position];
-        GameObject toAdd = null;
-        string restore = "";
-        if (player == 1)
-        {
-            toAdd = bigX;
-            restore = "X";
-        }
-        else if (player == 2)
-        {
-            toAdd = bigO;
-            restore = "O";
-        }
-        toAdd.GetComponent<TextMeshProUGUI>().text += "<sub>" + turn.ToString() + "</sub>";
-        square.setBigMark(toAdd, restore, player, turn);
+        SquareBot square = squares[position];
         collapsed.Add(position);
-        
+
         // Check all marks in the square S collapsed into. Each corresponding
         // SpookyMark collapses into the square S' that is NOT S. Then, recursively
         // check each of those squares S'.
-        foreach (Mark mark in square.getMarks())
+        foreach (MarkBot mark in square.getMarks())
         {
-            SpookyMark sm = mark.sm;
+            SpookyMarkBot sm = mark.sm;
             int spookyPosition;
             if (sm.position1 == position)
             {
                 spookyPosition = sm.position2;
-            } else
+            }
+            else
             {
                 spookyPosition = sm.position1;
             }
