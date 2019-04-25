@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 
 public class Bot : MonoBehaviour
 {
@@ -32,15 +31,16 @@ public class Bot : MonoBehaviour
     {   
         List<Action> legalmoves = getLegalActions(board, actionType, 1, currentTurn); // 1 means bot
         List<int> Scores = new List<int>();
+
         
-        foreach (Action i in legalmoves) {
+        foreach (Action i in legalmoves){
             if(i.actionType == actionType){
                 BoardBot copy = board.shallowCopy();
                 Scores.Add(evalMove(i,copy,1,difficulty));
             }
         }
-        int max = Scores.Max();
-        int index = Scores.IndexOf(max);
+        int max = max(Scores);
+        int index = Scores.indexof(max);
         return legalmoves[index];
 
 
@@ -61,36 +61,58 @@ public class Bot : MonoBehaviour
                 Scores.Add(evalMove(i,copy,0,difficulty));
             }
         }
-        int min = Scores.Min();
-        int index = Scores.IndexOf(min);
+        int min = min(Scores);
+        int index = Scores.indexof(min);
         return legalmoves[index];
 
 
         
         // Perform tree search for best strategy
     }
+    
+    private int evalState(Board board){ // return [Xscore,Oscore]
+        int Xscore = evalplayer(Board,0);
+        int Oscore = - evalplayer(Board,1);
+        return Xscore + Oscore;
+    }
 
-    private void evalState(BoardBot board)
-    {
-        // Create leaf node of the search tree
+    private int evalplayer(Board board, int agent){ // return Score
+        int score;
+        
+        return score;
     }
     
 
     public int evalMove(Action move, BoardBot board,int agent,int difficulty) {
         double score;
         if(difficulty == 0){
-            return 0;
+            Board copy = Board.copy(board);
+            copy.makemove(move);
+            score = evalState(copy);
+            return score;
         }
         if(agent == 1){
-            getNextMoveopponent(board, move.actionType, difficulty);
-            
+            Board copy = Board.copy(board);
+            copy.makemove(move);
+            Action act = getNextMoveopponent(copy,actionType,0,difficulty-1);
+            copy.makemove(act);
+            return evalState(copy);
+
+        }else if(agent == 0){
+            Board copy = Board.copy(board);
+            copy.makemove(move);
+            Action act = getNextMove(copy,actionType,1,difficulty-1);
+            copy.makemove(act);
+            return evalState(copy);
         }
-        return 0;
+
+
     }
 
     private List<Action> getLegalActions(BoardBot board, int actionType, int agent, int turnNum)
     {
         // Generate all possible actions
+
         List<Action> result = new List<Action>();
 
         if (actionType == 1) 
@@ -112,13 +134,13 @@ public class Bot : MonoBehaviour
 
         // Otherwise we return all the possible spookyMarks to add
         // First find all possible squares we can put marks on.
-        List<SquareBot> validSquares = new List<SquareBot>();
+        List<int> validSquares = new LinkedList<int>();
         for (int i=0; i<9; i++)
         {
             SquareBot sq = board.squares[i];
             if (!sq.classicallyMarked && sq.filledMarks < 8)
             {
-                validSquares.Add(sq);
+                validSquares.Add(i);
             }
         }
         // If no valid squares, return null
@@ -163,6 +185,27 @@ public class Bot : MonoBehaviour
                     }
                 }
             }
+    }
+
+    private List<int> getNeighbor(int sq)
+    {
+        // return a list of indices of squares that are neighbors of sq
+        int r = sq % 3;
+        int c = sq - 3*r;
+
+        List<int> neighbors = new LinkedList<int>();
+        for (int i=r-1; i<=r+1; i++)
+        {
+            for (int j=c-1; j<=c+1; j++)
+            {
+                int index = 3*i+j;
+                if (index != sq && index >= 0 && index < 9)
+                {
+                    neighbors.Add(index);
+                }
+            }
+        }
+        return neighbors;
     }
 
     // Update is called once per frame
