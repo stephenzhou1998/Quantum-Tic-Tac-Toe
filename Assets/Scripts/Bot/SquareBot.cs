@@ -33,7 +33,13 @@ public class SquareBot
         List<MarkBot> pms = new List<MarkBot>();
         foreach (Mark m in sq.presentMarks)
         {
-            pms.Add(new MarkBot(m.player, m.turn, m.position));
+            if (m.sm != null)
+            {
+                pms.Add(new MarkBot(m.player, m.turn, m.position, new SpookyMarkBot(m.sm)));
+            } else
+            {
+                pms.Add(new MarkBot(m.player, m.turn, m.position, null));
+            }
         }
         this.init(gmb, pms, sq.position, sq.alreadyMarked, sq.classicallyMarked, 
             sq.finalPlayer, sq.finalTurn, sq.filledMarks);
@@ -44,7 +50,14 @@ public class SquareBot
         List<MarkBot> pms = new List<MarkBot>();
         foreach (Mark m in sq.presentMarks)
         {
-            pms.Add(new MarkBot(m.player, m.turn, m.position));
+            if (m.sm != null)
+            {
+                pms.Add(new MarkBot(m.player, m.turn, m.position, new SpookyMarkBot(m.sm)));
+            }
+            else
+            {
+                pms.Add(new MarkBot(m.player, m.turn, m.position, null));
+            }
         }
         this.init(new GameManagerBot(sq.gameManager), pms, sq.position, sq.alreadyMarked, sq.classicallyMarked,
             sq.finalPlayer, sq.finalTurn, sq.filledMarks);
@@ -66,7 +79,7 @@ public class SquareBot
         int player = gameManager.getCurrentPlayer();
         int turn = gameManager.getTurnNum();
         
-        MarkBot mark = new MarkBot(player, turn, position);
+        MarkBot mark = new MarkBot(player, turn, position, null);
         presentMarks.Add(mark);
         alreadyMarked = true;
         gameManager.board.addMark(mark);

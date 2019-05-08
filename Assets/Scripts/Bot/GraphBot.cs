@@ -67,7 +67,6 @@ public class GraphBot
 
     public HashSet<SquareBot> getCycleSQ(SquareBot i)
     {
-        Debug.Log("detecting if there's a cycle starting from " + i.ToString());
         HashSet<SquareBot> visited = new HashSet<SquareBot>();
         if (dfsSQ(i, visited, null))
         {

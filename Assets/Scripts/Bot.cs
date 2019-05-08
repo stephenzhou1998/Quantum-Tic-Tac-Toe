@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using static System.ObjectExtensions;
 
 public class Bot : MonoBehaviour
 {
@@ -19,9 +20,8 @@ public class Bot : MonoBehaviour
 
     private BoardBot generateSuccessor(BoardBot board, int agent, Action action)
     {
-        GameManagerBot gmCopy = new GameManagerBot(gameManager);
-        BoardBot copy = gmCopy.board;
-        copy.gameManager = gmCopy;
+        //GameManagerBot gmCopy = new GameManagerBot(gameManager);
+        //BoardBot copy = gmCopy.board;
         action.performAction(board);
         return board;
     }
@@ -30,14 +30,12 @@ public class Bot : MonoBehaviour
     {
         GameManagerBot gmCopy = new GameManagerBot(gameManager);
         BoardBot copy = gmCopy.board;
-        copy.gameManager = gmCopy;
         Action act = getNextMove(copy, actionType, startDifficulty, turnNum);
         act.performAction(actualBoard);
     }
 
     public Action getNextMove(BoardBot board, int actionType, int difficulty, int turnNum)
     {
-        Debug.Log(actionType);
         List<Action> legalmoves = getLegalActions(board, actionType, 1, turnNum); // 1 means bot
         List<int> Scores = new List<int>();
 
@@ -46,15 +44,17 @@ public class Bot : MonoBehaviour
             return new Action();
         }
 
+        Debug.Log("Number of legal moves: " + legalmoves.Count);
         foreach (Action i in legalmoves)
         {
             if (i.actionType == actionType)
             {
-                //Board successor = generateSuccessor(board, 1, i);
-                //Scores.Add(getValue(successor, 1, difficulty));
-                Scores.Add(2);
+                BoardBot copy = board.Copy();
+                BoardBot successor = generateSuccessor(copy, 1, i);
+                Scores.Add(getValue(successor, 1, difficulty));
             }
         }
+
         int max = Scores.Max();
         int index = Scores.IndexOf(max);
         return legalmoves[index];
@@ -77,6 +77,7 @@ public class Bot : MonoBehaviour
         }
         else if (depth == 0)
         {
+            Debug.Log("Check");
             return evalState(board);
         }
         if (agent == 0)
@@ -124,7 +125,6 @@ public class Bot : MonoBehaviour
             {
                 GameManagerBot gmCopy = new GameManagerBot(gameManager);
                 BoardBot copy = gmCopy.board;
-                copy.gameManager = gmCopy;
                 Scores.Add(evalMove(i, copy, 0, difficulty, currentTurn));
                 Scores.Add(2.0);
             }
@@ -198,7 +198,6 @@ public class Bot : MonoBehaviour
         {
             GameManagerBot gmCopy = new GameManagerBot(gameManager);
             BoardBot copy = gmCopy.board;
-            copy.gameManager = gmCopy;
             move.performAction(copy);
             score = evalState(copy);
             return score;
@@ -207,7 +206,6 @@ public class Bot : MonoBehaviour
         {
             GameManagerBot gmCopy = new GameManagerBot(gameManager);
             BoardBot copy = gmCopy.board;
-            copy.gameManager = gmCopy;
             move.performAction(copy);
             Action act = getNextMoveopponent(copy, move.actionType, difficulty - 1, currentTurn);
             act.performAction(copy);
@@ -218,7 +216,6 @@ public class Bot : MonoBehaviour
         {
             GameManagerBot gmCopy = new GameManagerBot(gameManager);
             BoardBot copy = gmCopy.board;
-            copy.gameManager = gmCopy;
             move.performAction(copy);
             Action act = getNextMove(copy, move.actionType, difficulty - 1, currentTurn);
             act.performAction(copy);

@@ -118,7 +118,7 @@ public class GameManager : MonoBehaviour
 
     IEnumerator botTurn(int actionType, int turnNum)
     {
-        yield return new WaitForSeconds(Random.Range(2, 3));
+        yield return new WaitForSeconds(1);
         bot.executeTurn(actionType, turnNum);
     }
 
@@ -170,7 +170,14 @@ public class GameManager : MonoBehaviour
         {
             winner = "O";
         }
-        playerTurn.text = "Player " + winner + " wins!";
+        if (pvb && player == 2)
+        {
+            playerTurn.text = "Bot wins!";
+        } else
+        {
+            playerTurn.text = "Player " + winner + " wins!";
+        }
+        botThinking.text = "";
         foreach (Transform square in board.transform)
         {
             square.gameObject.GetComponent<Square>().disableButton();

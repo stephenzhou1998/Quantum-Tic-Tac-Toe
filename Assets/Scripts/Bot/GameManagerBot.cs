@@ -27,7 +27,7 @@ public class GameManagerBot
     public GameManagerBot(GameManager gm)
     {
         this.init(gm.currentPlayer, gm.turnNum, gm.numMarks, 
-            gm.won, gm.draw, new BoardBot(gm.board.GetComponent<Board>()));
+            gm.won, gm.draw, new BoardBot(gm.board.GetComponent<Board>(), this));
     }
 
     public int getCurrentPlayer()

@@ -7,7 +7,7 @@ public class BoardBot
     GraphBot entGraph;
     public SquareBot[] squares;
     List<SpookyMarkBot> spookyMarks;
-    List<int> collapsed;
+    public List<int> collapsed;
     public SpookyMarkBot toCollapse;
     public List<MarkBot> currentSpookyMark;
     public int nextAction; // 0: next player should place a spooky mark. 1: next player should pick a square to collapse.
@@ -26,13 +26,9 @@ public class BoardBot
         this.nextAction = nextAction;
     }
 
-    public BoardBot shallowCopy()
+    public BoardBot(Board b, GameManagerBot gameManager)
     {
-        return (BoardBot) this.MemberwiseClone();
-    }
-
-    public BoardBot(Board b)
-    {
+        this.gameManager = gameManager;
         Square[] s = b.squares;
         SquareBot[] sb = new SquareBot[s.Length];
         for (int i = 0; i < s.Length; i++)
@@ -49,7 +45,7 @@ public class BoardBot
         {
             mb.Add(new MarkBot(m));
         }
-        Debug.Log("hello: " + b.toCollapse);
+
         if (b.toCollapse == null)
         {
             this.init(new GraphBot(b.entGraph, gameManager), sb, smb, b.collapsed,

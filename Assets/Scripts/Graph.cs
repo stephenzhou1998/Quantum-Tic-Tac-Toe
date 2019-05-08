@@ -29,18 +29,8 @@ public class Graph : MonoBehaviour
     }
     
     public void addEdge(SpookyMark u, SpookyMark v){
-        //HashSet<Mark> m = null;
-        //if(!adjlist.TryGetValue(u, out m)){
-        //    adjlist[u] = new HashSet<Mark>();
-        //}
-        //Debug.Log("Making edge between " + u.ToString() + " and " + v.ToString());
         adjlist[u].Add(v);
-        //if(!adjlist.TryGetValue(v, out m)){
-        //    adjlist[v] = new HashSet<Mark>();
-        //}
         adjlist[v].Add(u);
-        //Debug.Log("adjacency list of " + u.ToString() + " contains:");
-        //printSet(adjlist[u]);
     }
 
     // Returns true if there is a cycle
@@ -82,7 +72,6 @@ public class Graph : MonoBehaviour
     }
 
     public HashSet<SpookyMark> getCycle(SpookyMark i){
-        Debug.Log("detecting if there's a cycle starting from SpookyMark: " + i.ToString());
         HashSet<SpookyMark> visited = new HashSet<SpookyMark>();
         if(dfs(i,visited, null)) {
             //foreach (SpookyMark j in visited){
@@ -95,7 +84,6 @@ public class Graph : MonoBehaviour
 
     public HashSet<Square> getCycleSQ(Square i)
     {
-        Debug.Log("detecting if there's a cycle starting from " + i.ToString());
         HashSet<Square> visited = new HashSet<Square>();
         if (dfsSQ(i, visited, null))
         {
@@ -110,14 +98,6 @@ public class Graph : MonoBehaviour
 
     public bool dfs(SpookyMark i, HashSet<SpookyMark> visited, SpookyMark parent)
     {
-        //Debug.Log("Processing " + i.ToString() + ", visited contains: ");
-        //printSet(visited);
-        //if (visited.Contains(i)){
-        //    return true;
-        //} else {}
-        visited.Add(i);
-        //Debug.Log("Adjacency list of " + i.ToString() + ": ");
-        //printSet(adjlist[i]);
         foreach (SpookyMark j in adjlist[i]) {
             if (visited.Contains(j))
             {
@@ -136,18 +116,7 @@ public class Graph : MonoBehaviour
 
     public bool dfsSQ(Square i, HashSet<Square> visited, Square parent)
     {
-        //Debug.Log("Processing " + i.ToString() + ", visited contains: ");
-        //printSetSQ(visited);
-        //if (parent != null)
-        //{
-        //    Debug.Log("Parent is " + parent.ToString());
-        //} else
-        //{
-        //    Debug.Log("No parent");
-        //}
         visited.Add(i);
-        //Debug.Log("Adjacency list of " + i.ToString() + ": ");
-        //printSetSQ(adjlistSQ[i]);
         foreach (Square j in adjlistSQ[i])
         {
             if (visited.Contains(j))

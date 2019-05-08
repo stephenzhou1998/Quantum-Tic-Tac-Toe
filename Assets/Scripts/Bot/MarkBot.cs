@@ -7,29 +7,28 @@ public class MarkBot
     public int player;
     public int turn;
     public int position;
-    // The square that this Mark is in
     // The SpookyMark that this mark is part of
     public SpookyMarkBot sm;
 
-    public void init(int p, int t, int pos)
+    public void init(int p, int t, int pos, SpookyMarkBot sm)
     {
         player = p;
         turn = t;
         position = pos;
-        sm = null;
+        this.sm = sm;
     }
 
-    public MarkBot(int p, int t, int pos)
+    public MarkBot(int p, int t, int pos, SpookyMarkBot sm)
     {
         player = p;
         turn = t;
         position = pos;
-        sm = null;
+        this.sm = sm;
     }
 
     public MarkBot(Mark m)
     {
-        this.init(m.player, m.turn, m.position);
+        this.init(m.player, m.turn, m.position, null);
     }
 
     public string ToString()
