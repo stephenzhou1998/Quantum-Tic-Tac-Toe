@@ -85,6 +85,13 @@ public class SquareBot
         gameManager.board.addMark(mark);
     }
 
+    public void setBigMark(int player, int turn)
+    {
+        classicallyMarked = true;
+        finalPlayer = player;
+        finalTurn = turn;
+    }
+
     public List<MarkBot> getMarks()
     {
         return presentMarks;

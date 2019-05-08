@@ -51,12 +51,15 @@ public class Bot : MonoBehaviour
             {
                 BoardBot copy = board.Copy();
                 BoardBot successor = generateSuccessor(copy, 1, i);
-                Scores.Add(getValue(successor, 1, difficulty));
+                int value = getValue(successor, 1, difficulty);
+                Debug.Log(i);
+                Debug.Log("Score: " + value);
+                Scores.Add(value);
             }
         }
 
-        int max = Scores.Max();
-        int index = Scores.IndexOf(max);
+        int min = Scores.Min();
+        int index = Scores.IndexOf(min);
         return legalmoves[index];
 
 
@@ -77,7 +80,6 @@ public class Bot : MonoBehaviour
         }
         else if (depth == 0)
         {
-            Debug.Log("Check");
             return evalState(board);
         }
         if (agent == 0)
@@ -93,7 +95,8 @@ public class Bot : MonoBehaviour
         foreach (Action action in getLegalActions(board, board.nextAction, agent,
             gameManager.getTurnNum() + startDifficulty - depth))
         {
-            BoardBot successor = generateSuccessor(board, agent, action);
+            BoardBot copy = board.Copy();
+            BoardBot successor = generateSuccessor(copy, 1, action);
             int newVal = getValue(successor, (agent + 1) % 2, depth);
             v = v > newVal ? v : newVal;
         }
@@ -106,7 +109,8 @@ public class Bot : MonoBehaviour
         foreach (Action action in getLegalActions(board, board.nextAction, agent,
             gameManager.getTurnNum() + startDifficulty - depth))
         {
-            BoardBot successor = generateSuccessor(board, agent, action);
+            BoardBot copy = board.Copy();
+            BoardBot successor = generateSuccessor(copy, 1, action);
             int newVal = getValue(successor, (agent + 1) % 2, depth);
             v = v < newVal ? v : newVal;
         }
@@ -158,6 +162,7 @@ public class Bot : MonoBehaviour
             }
 
             List<int> neighbors = getNeighbor(i);
+
             foreach (int k in neighbors)
             {
                 int gain = 0;
@@ -318,14 +323,18 @@ public class Bot : MonoBehaviour
     private List<int> getNeighbor(int sq)
     {
         // return a list of indices of squares that are neighbors of sq
-        int r = sq % 3;
-        int c = sq - 3 * r;
+        int r = sq / 3;
+        int c = sq % 3;
 
         List<int> neighbors = new List<int>();
         for (int i = r - 1; i <= r + 1; i++)
         {
             for (int j = c - 1; j <= c + 1; j++)
             {
+                if (i < 0 || j < 0 || i > 2 || j > 2)
+                {
+                    continue;
+                }
                 int index = 3 * i + j;
                 if (index != sq && index >= 0 && index < 9)
                 {

@@ -203,6 +203,7 @@ public class BoardBot
             return;
         }
         SquareBot square = squares[position];
+        square.setBigMark(player, turn);
         collapsed.Add(position);
 
         // Check all marks in the square S collapsed into. Each corresponding

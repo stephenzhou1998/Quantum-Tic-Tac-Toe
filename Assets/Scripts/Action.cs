@@ -73,4 +73,20 @@ public class Action : MonoBehaviour
             }
         }
     }
+
+    public override string ToString()
+    {
+        string ret = "Action: ";
+        if (actionType == 0)
+        {
+            ret += "Placing new SpookyMark: " + p1 + ", " + p2;
+        } else if (actionType == 1)
+        {
+            ret += "Collapsing " + sqBot;
+        } else if (actionType == 2)
+        {
+            ret += "Do nothing.";
+        }
+        return ret;
+    }
 }
