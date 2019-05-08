@@ -22,6 +22,7 @@ public class BoardBot
         this.spookyMarks = spookyMarks;
         this.collapsed = collapsed;
         this.toCollapse = toCollapse;
+        this.currentSpookyMark = currentSpookyMark;
         this.nextAction = nextAction;
     }
 
@@ -48,7 +49,16 @@ public class BoardBot
         {
             mb.Add(new MarkBot(m));
         }
-        this.init(new GraphBot(b.entGraph), sb, smb, b.collapsed, new SpookyMarkBot(b.toCollapse), mb, b.nextAction);
+        Debug.Log("hello: " + b.toCollapse);
+        if (b.toCollapse == null)
+        {
+            this.init(new GraphBot(b.entGraph, gameManager), sb, smb, b.collapsed,
+            null, mb, b.nextAction);
+        } else
+        {
+            this.init(new GraphBot(b.entGraph, gameManager), sb, smb, b.collapsed,
+                new SpookyMarkBot(b.toCollapse), mb, b.nextAction);
+        }
     }
 
     public void addMark(MarkBot mark)
@@ -71,13 +81,13 @@ public class BoardBot
         mark2.sm = s;
         spookyMarks.Add(s);
 
-        if (entGraph.addEdgeSQ(mark1.square, mark2.square))
+        if (entGraph.addEdgeSQ(squares[mark1.position], squares[mark2.position]))
         {
             toCollapse = s;
             return s;
         }
 
-        HashSet<SquareBot> sqCycle = entGraph.getCycleSQ(mark1.square);
+        HashSet<SquareBot> sqCycle = entGraph.getCycleSQ(squares[mark1.position]);
         if (sqCycle != null)
         {
             toCollapse = s;

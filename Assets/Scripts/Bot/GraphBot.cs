@@ -17,17 +17,17 @@ public class GraphBot
         this.adjlistSQ = adjlistSQ;
     }
 
-    public GraphBot(Graph g)
+    public GraphBot(Graph g, GameManagerBot gameManager)
     {
         Dictionary<SquareBot, HashSet<SquareBot>> adjlistSQ = new Dictionary<SquareBot, HashSet<SquareBot>>();
         Dictionary<Square, HashSet<Square>> gList = g.adjlistSQ;
         foreach (KeyValuePair<Square, HashSet<Square>> kvp in gList)
         {
-            SquareBot sb = new SquareBot(kvp.Key);
+            SquareBot sb = new SquareBot(kvp.Key, gameManager);
             HashSet<SquareBot> h = new HashSet<SquareBot>();
             foreach (Square sq in kvp.Value)
             {
-                h.Add(new SquareBot(sq));
+                h.Add(new SquareBot(sq, gameManager));
             }
             adjlistSQ.Add(sb, h);
         }
