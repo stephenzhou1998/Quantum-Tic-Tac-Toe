@@ -12,11 +12,13 @@ public class GameManager : MonoBehaviour
     public int numMarks;
     public GameObject board;
     public Text playerTurn;
+    public Text botThinking;
     public TextMeshProUGUI collapseText;
     public GameObject collapseButtons;
     public bool won;
     public bool draw;
     public bool pvb;
+    private bool playerCollapsing;
     private Bot bot;
     // Start is called before the first frame update
     void Awake()
@@ -26,9 +28,11 @@ public class GameManager : MonoBehaviour
         numMarks = 0;
         playerTurn.text = "Player X's turn";
         collapseText.text = "";
+        botThinking.text = "";
         collapseButtons.SetActive(false);
         won = false;
         draw = false;
+        playerCollapsing = false;
         bot = GameObject.Find("Bot").GetComponent<Bot>();
     }
 
@@ -61,15 +65,18 @@ public class GameManager : MonoBehaviour
             {
                 str = "Bot's turn";
                 switchedToBot = true;
+                botThinking.text = "Bot is thinking...";
             } else
             {
                 str = "Player O's turn";
             }
+            playerCollapsing = false;
         } else if (currentPlayer == 2)
         {
             if (pvb)
             {
                 botSwitchedBack = true;
+                botThinking.text = "";
             }
             currentPlayer = 1;
             str = "Player X's turn";
@@ -81,7 +88,7 @@ public class GameManager : MonoBehaviour
             square.gameObject.GetComponent<Square>().reset();
         }
         SpookyMark s = board.GetComponent<Board>().addSpookyMark();
-        if (s != null)
+        if (s != null && !switchedToBot)
         {
             collapse(lastPlayer, lastTurn, s);
         }
@@ -97,10 +104,10 @@ public class GameManager : MonoBehaviour
             {
                 actionType = 1;
             }
-            bot.executeTurn(actionType, turnNum);
+            StartCoroutine(botTurn(actionType, turnNum));
         }
 
-        if (botSwitchedBack)
+        if (botSwitchedBack && !playerCollapsing)
         {
             foreach (Transform square in board.transform)
             {
@@ -109,15 +116,23 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    IEnumerator botTurn(int actionType, int turnNum)
+    {
+        yield return new WaitForSeconds(Random.Range(2, 3));
+        bot.executeTurn(actionType, turnNum);
+    }
+
     public void collapse(int player, int turn, SpookyMark sm)
     {
         string p = "";
         if (player == 1)
         {
             p = "X";
+            playerCollapsing = false;
         } else if (player == 2)
         {
             p = "O";
+            playerCollapsing = true;
         }
         foreach (Transform square in board.transform)
         {
@@ -133,6 +148,7 @@ public class GameManager : MonoBehaviour
     {
         if (pvb && currentPlayer == 2)
         {
+            // TODO: Might be turnNum + 1?
             bot.executeTurn(0, turnNum);
         }
         foreach (Transform square in board.transform)

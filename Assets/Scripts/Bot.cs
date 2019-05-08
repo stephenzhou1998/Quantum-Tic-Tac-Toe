@@ -41,6 +41,10 @@ public class Bot : MonoBehaviour
         List<Action> legalmoves = getLegalActions(board, actionType, 1, turnNum); // 1 means bot
         List<int> Scores = new List<int>();
 
+        if (legalmoves == null)
+        {
+            return new Action();
+        }
 
         foreach (Action i in legalmoves)
         {
@@ -241,6 +245,7 @@ public class Bot : MonoBehaviour
             }
             int pos1 = sm.position1;
             int pos2 = sm.position2;
+            Debug.Log("Will collapse position: " + board.squares[pos1].position);
             result.Add(new Action(board.squares[pos1]));
             result.Add(new Action(board.squares[pos2]));
             return result;
@@ -268,10 +273,22 @@ public class Bot : MonoBehaviour
             validSquares.Add(validSquares[0]);
         }
 
-        foreach (int[] c in combinations(2, validSquares.Count))
+        //foreach (int[] c in combinations(2, validSquares.Count))
+        //{
+        //    int p = agent;
+        //    result.Add(new Action(c[0], c[1]));
+        //}
+        
+        foreach (int first in validSquares)
         {
-            int p = agent;
-            result.Add(new Action(c[0], c[1]));
+            foreach (int second in validSquares)
+            {
+                if (second <= first)
+                {
+                    continue;
+                }
+                result.Add(new Action(first, second));
+            }
         }
         return result;
     }

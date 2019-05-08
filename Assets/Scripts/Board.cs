@@ -163,8 +163,6 @@ public class Board : MonoBehaviour
         toCollapse = null;
         collapseHelper(position, player, turn);
         gameManager.finishCollapse();
-        // Might not be necessary
-        // entGraph.removeCycleSQ(squares[position]);
         checkWin();
     }
 

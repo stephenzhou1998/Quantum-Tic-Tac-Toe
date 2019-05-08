@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class Action : MonoBehaviour
 {
-    // 0 means placing new spookyMarks, 1 means choosing square to collapse
+    // 0 means placing new spookyMarks, 1 means choosing square to collapse, 2 means do nothing
     public int actionType;
     int p1;
     int p2;
-    Square sq;
     SquareBot sqBot;
 
     public Action(int position1, int position2)
@@ -16,19 +15,18 @@ public class Action : MonoBehaviour
         actionType = 0;
         this.p1 = position1;
         this.p2 = position2;
-        sq = null;
-    }
-
-    public Action(Square toCollapse)
-    {
-        actionType = 1;
-        sq = toCollapse;
+        sqBot = null;
     }
 
     public Action(SquareBot toCollapse)
     {
         actionType = 1;
         sqBot = toCollapse;
+    }
+
+    public Action()
+    {
+        actionType = 2;
     }
 
     public void performAction(Board board)
@@ -41,7 +39,8 @@ public class Action : MonoBehaviour
         else if (actionType == 1)
         {
             SpookyMark toCollapse = board.toCollapse;
-            int positionToCollapse = sq.position;
+            int positionToCollapse = sqBot.position;
+            Debug.Log("collapsing position: " + positionToCollapse);
             if (positionToCollapse == toCollapse.position1)
             {
                 board.collapse(1);
@@ -63,7 +62,7 @@ public class Action : MonoBehaviour
         else if (actionType == 1)
         {
             SpookyMarkBot toCollapse = board.toCollapse;
-            int positionToCollapse = sq.position;
+            int positionToCollapse = sqBot.position;
             if (positionToCollapse == toCollapse.position1)
             {
                 board.collapse(1);

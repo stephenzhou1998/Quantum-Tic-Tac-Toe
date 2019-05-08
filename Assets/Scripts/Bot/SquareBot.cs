@@ -15,11 +15,12 @@ public class SquareBot
     public int filledMarks;
     public List<MarkBot> presentMarks;
 
-    public void init(GameManagerBot gmb, List<MarkBot> pms, bool alreadyMarked, bool classicallyMarked, 
+    public void init(GameManagerBot gmb, List<MarkBot> pms, int position, bool alreadyMarked, bool classicallyMarked, 
         int finalPlayer, int finalTurn, int filledMarks)
     {
         gameManager = gmb;
         presentMarks = pms;
+        this.position = position;
         this.alreadyMarked = alreadyMarked;
         this.classicallyMarked = classicallyMarked;
         this.finalPlayer = finalPlayer;
@@ -34,7 +35,7 @@ public class SquareBot
         {
             pms.Add(new MarkBot(m.player, m.turn, m.position));
         }
-        this.init(gmb, pms, sq.alreadyMarked, sq.classicallyMarked, 
+        this.init(gmb, pms, sq.position, sq.alreadyMarked, sq.classicallyMarked, 
             sq.finalPlayer, sq.finalTurn, sq.filledMarks);
     }
 
@@ -45,18 +46,7 @@ public class SquareBot
         {
             pms.Add(new MarkBot(m.player, m.turn, m.position));
         }
-        this.init(new GameManagerBot(sq.gameManager), pms, sq.alreadyMarked, sq.classicallyMarked,
-            sq.finalPlayer, sq.finalTurn, sq.filledMarks);
-    }
-
-    public SquareBot(Square sq, GameManagerBot gameManager)
-    {
-        List<MarkBot> pms = new List<MarkBot>();
-        foreach (Mark m in sq.presentMarks)
-        {
-            pms.Add(new MarkBot(m.player, m.turn, m.position));
-        }
-        this.init(gameManager, pms, sq.alreadyMarked, sq.classicallyMarked,
+        this.init(new GameManagerBot(sq.gameManager), pms, sq.position, sq.alreadyMarked, sq.classicallyMarked,
             sq.finalPlayer, sq.finalTurn, sq.filledMarks);
     }
 

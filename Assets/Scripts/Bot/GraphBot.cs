@@ -23,11 +23,11 @@ public class GraphBot
         Dictionary<Square, HashSet<Square>> gList = g.adjlistSQ;
         foreach (KeyValuePair<Square, HashSet<Square>> kvp in gList)
         {
-            SquareBot sb = new SquareBot(kvp.Key, gameManager);
+            SquareBot sb = new SquareBot(gameManager, kvp.Key);
             HashSet<SquareBot> h = new HashSet<SquareBot>();
             foreach (Square sq in kvp.Value)
             {
-                h.Add(new SquareBot(sq, gameManager));
+                h.Add(new SquareBot(gameManager, sq));
             }
             adjlistSQ.Add(sb, h);
         }
