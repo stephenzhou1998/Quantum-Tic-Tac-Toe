@@ -31,7 +31,7 @@ public class MarkBot
         this.init(m.player, m.turn, m.position, null);
     }
 
-    public string ToString()
+    public override string ToString()
     {
         return string.Format("Player {0}, Turn {1}: Position {2}", player, turn, position);
     }

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 public class BoardBot
@@ -223,5 +224,15 @@ public class BoardBot
             }
             collapseHelper(spookyPosition, sm.player, sm.turn);
         }
+    }
+
+    public override string ToString()
+    {
+        StringBuilder sb = new StringBuilder("Board: \n");
+        foreach (SquareBot sq in squares)
+        {
+            sb.Append(sq);
+        }
+        return sb.ToString();
     }
 }

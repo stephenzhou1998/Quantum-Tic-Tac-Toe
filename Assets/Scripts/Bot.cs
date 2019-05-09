@@ -51,8 +51,8 @@ public class Bot : MonoBehaviour
             {
                 BoardBot copy = board.Copy();
                 BoardBot successor = generateSuccessor(copy, 1, i);
-                int value = getValue(successor, 1, difficulty);
                 Debug.Log(i);
+                int value = getValue(successor, 1, difficulty);
                 Debug.Log("Score: " + value);
                 Scores.Add(value);
             }
@@ -86,7 +86,7 @@ public class Bot : MonoBehaviour
         {
             return maxValue(board, agent, depth - 1);
         }
-        return minValue(board, agent, depth);
+        return minValue(board, agent, depth - 1);
     }
 
     private int maxValue(BoardBot board, int agent, int depth)
@@ -130,7 +130,6 @@ public class Bot : MonoBehaviour
                 GameManagerBot gmCopy = new GameManagerBot(gameManager);
                 BoardBot copy = gmCopy.board;
                 Scores.Add(evalMove(i, copy, 0, difficulty, currentTurn));
-                Scores.Add(2.0);
             }
         }
         double min = Scores.Min();
@@ -144,6 +143,14 @@ public class Bot : MonoBehaviour
 
     private int evalState(BoardBot board)
     { // return [Xscore,Oscore]
+        //Debug.Log("Evaluating board: ");
+        //Debug.Log(board);
+        //Debug.Log("Checking filled marks: ");
+        //foreach (SquareBot sq in board.squares)
+        //{
+        //    Debug.Log(sq);
+        //    Debug.Log("Filled marks: " + sq.filledMarks);
+        //}
         int Xscore = evalplayer(board, 0);
         int Oscore = -evalplayer(board, 1);
         return Xscore + Oscore;
@@ -151,10 +158,11 @@ public class Bot : MonoBehaviour
 
     private int evalplayer(BoardBot board, int agent)
     { // return Score
-
         int score = 0;
+        agent++;
         for (int i = 0; i < 9; i++)
         {
+            //Debug.Log("Square " + i + ": ");
             SquareBot sq = board.squares[i];
             if (sq.classicallyMarked && sq.finalPlayer != agent)
             {
@@ -165,14 +173,17 @@ public class Bot : MonoBehaviour
 
             foreach (int k in neighbors)
             {
+                //Debug.Log("Neighbor " + k + ": ");
                 int gain = 0;
                 SquareBot neigh = board.squares[k];
                 if (neigh.classicallyMarked && neigh.finalPlayer == agent)
                 {
+                    //Debug.Log("what?");
                     gain += 20;
                 }
                 else if (neigh.filledMarks == 0)
                 {
+                    //Debug.Log("neighbor is empty");
                     gain += 5;
                 }
                 else
@@ -181,6 +192,7 @@ public class Bot : MonoBehaviour
                     {
                         if (m.player == agent)
                         {
+                            //Debug.Log("hello");
                             gain += 1;
                         }
                     }

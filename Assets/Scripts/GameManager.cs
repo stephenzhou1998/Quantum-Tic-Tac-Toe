@@ -118,7 +118,7 @@ public class GameManager : MonoBehaviour
 
     IEnumerator botTurn(int actionType, int turnNum)
     {
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0);
         bot.executeTurn(actionType, turnNum);
     }
 

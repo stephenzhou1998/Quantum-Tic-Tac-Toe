@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -65,7 +66,13 @@ public class SquareBot
 
     public override string ToString()
     {
-        return "Square " + position.ToString();
+        StringBuilder sb = new StringBuilder("Square " + position.ToString() + ": \n");
+        sb.Append("Contains marks: \n");
+        foreach (MarkBot m in presentMarks)
+        {
+            sb.Append(m + "\n");
+        }
+        return sb.ToString();
     }
 
     public void addMark()
@@ -83,6 +90,7 @@ public class SquareBot
         presentMarks.Add(mark);
         alreadyMarked = true;
         gameManager.board.addMark(mark);
+        filledMarks++;
     }
 
     public void setBigMark(int player, int turn)
