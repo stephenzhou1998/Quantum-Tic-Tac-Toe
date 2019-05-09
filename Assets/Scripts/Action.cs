@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Action : MonoBehaviour
+public class Action
 {
     // 0 means placing new spookyMarks, 1 means choosing square to collapse, 2 means do nothing
     public int actionType;

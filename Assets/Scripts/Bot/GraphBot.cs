@@ -34,6 +34,23 @@ public class GraphBot
         this.init(adjlistSQ);
     }
 
+    public GraphBot(GraphBot g, GameManagerBot gameManager)
+    {
+        Dictionary<SquareBot, HashSet<SquareBot>> adjlistSQ = new Dictionary<SquareBot, HashSet<SquareBot>>();
+        Dictionary<SquareBot, HashSet<SquareBot>> gList = g.adjlistSQ;
+        foreach (KeyValuePair<SquareBot, HashSet<SquareBot>> kvp in gList)
+        {
+            SquareBot sb = new SquareBot(gameManager, kvp.Key);
+            HashSet<SquareBot> h = new HashSet<SquareBot>();
+            foreach (SquareBot sq in kvp.Value)
+            {
+                h.Add(new SquareBot(gameManager, sq));
+            }
+            adjlistSQ.Add(sb, h);
+        }
+        this.init(adjlistSQ);
+    }
+
     // Returns true if there is a cycle
     public bool addEdgeSQ(SquareBot u, SquareBot v)
     {

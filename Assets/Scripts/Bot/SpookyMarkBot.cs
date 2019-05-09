@@ -46,6 +46,15 @@ public class SpookyMarkBot
         this.init(mark1, mark2);
     }
 
+    public SpookyMarkBot(SpookyMarkBot sm)
+    {
+        MarkBot mark1 = new MarkBot(sm.mark1);
+        mark1.sm = this;
+        MarkBot mark2 = new MarkBot(sm.mark2);
+        mark2.sm = this;
+        this.init(mark1, mark2);
+    }
+
     public void setFinal(int pos)
     {
         this.position1 = -1;

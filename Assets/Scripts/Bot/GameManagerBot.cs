@@ -30,6 +30,12 @@ public class GameManagerBot
             gm.won, gm.draw, new BoardBot(gm.board.GetComponent<Board>(), this));
     }
 
+    public GameManagerBot(GameManagerBot gmb)
+    {
+        this.init(gmb.currentPlayer, gmb.turnNum, gmb.numMarks, gmb.won, gmb.draw,
+            new BoardBot(gmb.board, this));
+    }
+
     public int getCurrentPlayer()
     {
         return currentPlayer;

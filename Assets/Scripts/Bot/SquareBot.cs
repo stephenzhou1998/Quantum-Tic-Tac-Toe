@@ -46,6 +46,24 @@ public class SquareBot
             sq.finalPlayer, sq.finalTurn, sq.filledMarks);
     }
 
+    public SquareBot(GameManagerBot gmb, SquareBot sq)
+    {
+        List<MarkBot> pms = new List<MarkBot>();
+        foreach (MarkBot m in sq.presentMarks)
+        {
+            if (m.sm != null)
+            {
+                pms.Add(new MarkBot(m.player, m.turn, m.position, new SpookyMarkBot(m.sm)));
+            }
+            else
+            {
+                pms.Add(new MarkBot(m.player, m.turn, m.position, null));
+            }
+        }
+        this.init(gmb, pms, sq.position, sq.alreadyMarked, sq.classicallyMarked,
+            sq.finalPlayer, sq.finalTurn, sq.filledMarks);
+    }
+
     public SquareBot(Square sq)
     {
         List<MarkBot> pms = new List<MarkBot>();

@@ -26,6 +26,11 @@ public class MarkBot
         this.sm = sm;
     }
 
+    public MarkBot(MarkBot m)
+    {
+        this.init(m.player, m.turn, m.position, m.sm);
+    }
+
     public MarkBot(Mark m)
     {
         this.init(m.player, m.turn, m.position, null);

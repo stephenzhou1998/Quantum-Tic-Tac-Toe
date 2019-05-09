@@ -27,6 +27,39 @@ public class BoardBot
         this.nextAction = nextAction;
     }
 
+    public BoardBot(BoardBot b, GameManagerBot gameManager)
+    {
+        this.gameManager = gameManager;
+        SquareBot[] s = b.squares;
+        SquareBot[] sb = new SquareBot[s.Length];
+        for (int i = 0; i < s.Length; i++)
+        {
+            sb[i] = new SquareBot(gameManager, s[i]);
+        }
+        List<SpookyMarkBot> smb = new List<SpookyMarkBot>();
+        foreach (SpookyMarkBot sm in b.spookyMarks)
+        {
+            smb.Add(new SpookyMarkBot(sm));
+        }
+        List<MarkBot> mb = new List<MarkBot>();
+        foreach (MarkBot m in b.currentSpookyMark)
+        {
+            mb.Add(new MarkBot(m));
+        }
+        List<int> collapsed = new List<int>(b.collapsed);
+
+        if (b.toCollapse == null)
+        {
+            this.init(new GraphBot(b.entGraph, gameManager), sb, smb, collapsed,
+            null, mb, b.nextAction);
+        }
+        else
+        {
+            this.init(new GraphBot(b.entGraph, gameManager), sb, smb, collapsed,
+                new SpookyMarkBot(b.toCollapse), mb, b.nextAction);
+        }
+    }
+
     public BoardBot(Board b, GameManagerBot gameManager)
     {
         this.gameManager = gameManager;
@@ -46,14 +79,15 @@ public class BoardBot
         {
             mb.Add(new MarkBot(m));
         }
+        List<int> collapsed = new List<int>(b.collapsed);
 
         if (b.toCollapse == null)
         {
-            this.init(new GraphBot(b.entGraph, gameManager), sb, smb, b.collapsed,
+            this.init(new GraphBot(b.entGraph, gameManager), sb, smb, collapsed,
             null, mb, b.nextAction);
         } else
         {
-            this.init(new GraphBot(b.entGraph, gameManager), sb, smb, b.collapsed,
+            this.init(new GraphBot(b.entGraph, gameManager), sb, smb, collapsed,
                 new SpookyMarkBot(b.toCollapse), mb, b.nextAction);
         }
     }

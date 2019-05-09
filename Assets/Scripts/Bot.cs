@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using static System.ObjectExtensions;
 
 public class Bot : MonoBehaviour
 {
@@ -20,10 +19,10 @@ public class Bot : MonoBehaviour
 
     private BoardBot generateSuccessor(BoardBot board, int agent, Action action)
     {
-        //GameManagerBot gmCopy = new GameManagerBot(gameManager);
-        //BoardBot copy = gmCopy.board;
-        action.performAction(board);
-        return board;
+        GameManagerBot gmCopy = new GameManagerBot(board.gameManager);
+        BoardBot copy = gmCopy.board;
+        action.performAction(copy);
+        return copy;
     }
 
     public void executeTurn(int actionType, int turnNum)
@@ -49,8 +48,7 @@ public class Bot : MonoBehaviour
         {
             if (i.actionType == actionType)
             {
-                BoardBot copy = board.Copy();
-                BoardBot successor = generateSuccessor(copy, 1, i);
+                BoardBot successor = generateSuccessor(board, 1, i);
                 Debug.Log(i);
                 int value = getValue(successor, 1, difficulty);
                 Debug.Log("Score: " + value);
@@ -91,12 +89,17 @@ public class Bot : MonoBehaviour
 
     private int maxValue(BoardBot board, int agent, int depth)
     {
+        List<Action> legalmoves = getLegalActions(board, board.nextAction, agent,
+            gameManager.getTurnNum() + startDifficulty - depth);
+
         int v = int.MinValue;
-        foreach (Action action in getLegalActions(board, board.nextAction, agent,
-            gameManager.getTurnNum() + startDifficulty - depth))
+        if (legalmoves == null)
         {
-            BoardBot copy = board.Copy();
-            BoardBot successor = generateSuccessor(copy, 1, action);
+            return v;
+        }
+        foreach (Action action in legalmoves)
+        {
+            BoardBot successor = generateSuccessor(board, 1, action);
             int newVal = getValue(successor, (agent + 1) % 2, depth);
             v = v > newVal ? v : newVal;
         }
@@ -105,12 +108,16 @@ public class Bot : MonoBehaviour
 
     private int minValue(BoardBot board, int agent, int depth)
     {
+        List<Action> legalmoves = getLegalActions(board, board.nextAction, agent,
+            gameManager.getTurnNum() + startDifficulty - depth);
         int v = int.MaxValue;
-        foreach (Action action in getLegalActions(board, board.nextAction, agent,
-            gameManager.getTurnNum() + startDifficulty - depth))
+        if (legalmoves == null)
         {
-            BoardBot copy = board.Copy();
-            BoardBot successor = generateSuccessor(copy, 1, action);
+            return v;
+        }
+        foreach (Action action in legalmoves)
+        {
+            BoardBot successor = generateSuccessor(board, 1, action);
             int newVal = getValue(successor, (agent + 1) % 2, depth);
             v = v < newVal ? v : newVal;
         }
