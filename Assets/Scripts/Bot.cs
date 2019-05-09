@@ -200,7 +200,7 @@ public class Bot : MonoBehaviour
                         if (m.player == agent)
                         {
                             //Debug.Log("hello");
-                            gain += 1;
+                            gain += 2;
                         }
                         if(m.player != agent){
                             //Debug.Log("hellooooo");
