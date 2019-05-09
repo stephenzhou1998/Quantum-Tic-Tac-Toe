@@ -202,6 +202,10 @@ public class Bot : MonoBehaviour
                             //Debug.Log("hello");
                             gain += 1;
                         }
+                        if(m.player != agent){
+                            //Debug.Log("hellooooo");
+                            gain -= 5;
+                        }
                     }
                 }
                 if (sq.classicallyMarked)
