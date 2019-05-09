@@ -8,6 +8,7 @@ public class Bot : MonoBehaviour
     public int startDifficulty;
     private GameManager gameManager;
     public Board actualBoard;
+    private int numCopies;
     // public int currentTurn;
 
     // Start is called before the first frame update
@@ -15,10 +16,12 @@ public class Bot : MonoBehaviour
     {
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
         // currentTurn = 2;
+        numCopies = 0;
     }
 
     private BoardBot generateSuccessor(BoardBot board, int agent, Action action)
     {
+        numCopies++;
         GameManagerBot gmCopy = new GameManagerBot(board.gameManager);
         BoardBot copy = gmCopy.board;
         action.performAction(copy);
@@ -27,10 +30,12 @@ public class Bot : MonoBehaviour
 
     public void executeTurn(int actionType, int turnNum)
     {
+        numCopies = 0;
         GameManagerBot gmCopy = new GameManagerBot(gameManager);
         BoardBot copy = gmCopy.board;
         Action act = getNextMove(copy, actionType, startDifficulty, turnNum);
         act.performAction(actualBoard);
+        Debug.Log("Made " + numCopies + " copies.");
     }
 
     public Action getNextMove(BoardBot board, int actionType, int difficulty, int turnNum)
@@ -110,7 +115,7 @@ public class Bot : MonoBehaviour
             {
                 return v;
             }
-            alph = alph > v ? a : v;
+            alph = alph > v ? alph : v;
         }
         return v;
     }
