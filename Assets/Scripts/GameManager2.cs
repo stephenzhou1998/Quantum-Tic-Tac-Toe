@@ -7,11 +7,11 @@ public class GameManager2 : MonoBehaviour
 {
     public void pvp()
     {
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene("PVP");
     }
 
     public void pvb()
     {
-
+        SceneManager.LoadScene("PVB");
     }
 }

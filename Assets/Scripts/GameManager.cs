@@ -188,6 +188,7 @@ public class GameManager : MonoBehaviour
     public void noWinner()
     {
         playerTurn.text = "Draw!";
+        botThinking.text = "";
         foreach (Transform square in board.transform)
         {
             square.gameObject.GetComponent<Square>().disableButton();
@@ -197,6 +198,17 @@ public class GameManager : MonoBehaviour
 
     public void resetGame()
     {
-        SceneManager.LoadScene("SampleScene");
+        if (pvb)
+        {
+            SceneManager.LoadScene("PVB");
+        } else
+        {
+            SceneManager.LoadScene("PVP");
+        }
+    }
+
+    public void mainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
     }
 }
