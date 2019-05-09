@@ -8,6 +8,7 @@ public class Bot : MonoBehaviour
     public int startDifficulty;
     private GameManager gameManager;
     public Board actualBoard;
+    private int numCopies;
     // public int currentTurn;
 
     // Start is called before the first frame update
@@ -15,10 +16,12 @@ public class Bot : MonoBehaviour
     {
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
         // currentTurn = 2;
+        numCopies = 0;
     }
 
     private BoardBot generateSuccessor(BoardBot board, int agent, Action action)
     {
+        numCopies++;
         GameManagerBot gmCopy = new GameManagerBot(board.gameManager);
         BoardBot copy = gmCopy.board;
         action.performAction(copy);
@@ -27,10 +30,12 @@ public class Bot : MonoBehaviour
 
     public void executeTurn(int actionType, int turnNum)
     {
+        numCopies = 0;
         GameManagerBot gmCopy = new GameManagerBot(gameManager);
         BoardBot copy = gmCopy.board;
         Action act = getNextMove(copy, actionType, startDifficulty, turnNum);
         act.performAction(actualBoard);
+        Debug.Log("Made " + numCopies + " copies.");
     }
 
     public Action getNextMove(BoardBot board, int actionType, int difficulty, int turnNum)
@@ -43,6 +48,9 @@ public class Bot : MonoBehaviour
             return new Action();
         }
 
+        int alpha = int.MinValue;
+        int beta = int.MaxValue;
+
         Debug.Log("Number of legal moves: " + legalmoves.Count);
         foreach (Action i in legalmoves)
         {
@@ -50,22 +58,23 @@ public class Bot : MonoBehaviour
             {
                 BoardBot successor = generateSuccessor(board, 1, i);
                 Debug.Log(i);
-                int value = getValue(successor, 1, difficulty);
-                Debug.Log("Score: " + value);
-                Scores.Add(value);
+                int val = getValue(successor, 1, difficulty, alpha, beta);
+                if (val < alpha)
+                {
+                    break;
+                }
+                beta = beta < val ? beta : val;
+                Debug.Log("Score: " + val);
+                Scores.Add(val);
             }
         }
 
         int min = Scores.Min();
         int index = Scores.IndexOf(min);
         return legalmoves[index];
-
-
-
-        // Perform tree search for best strategy
     }
 
-    private int getValue(BoardBot board, int agent, int depth)
+    private int getValue(BoardBot board, int agent, int depth, int alph, int beta)
     {
         int winner = board.checkWin();
         if (winner == 0)
@@ -82,12 +91,12 @@ public class Bot : MonoBehaviour
         }
         if (agent == 0)
         {
-            return maxValue(board, agent, depth - 1);
+            return maxValue(board, agent, depth - 1, alph, beta);
         }
-        return minValue(board, agent, depth - 1);
+        return minValue(board, agent, depth - 1, alph, beta);
     }
 
-    private int maxValue(BoardBot board, int agent, int depth)
+    private int maxValue(BoardBot board, int agent, int depth, int alph, int beta)
     {
         List<Action> legalmoves = getLegalActions(board, board.nextAction, agent,
             gameManager.getTurnNum() + startDifficulty - depth);
@@ -100,13 +109,18 @@ public class Bot : MonoBehaviour
         foreach (Action action in legalmoves)
         {
             BoardBot successor = generateSuccessor(board, 1, action);
-            int newVal = getValue(successor, (agent + 1) % 2, depth);
+            int newVal = getValue(successor, (agent + 1) % 2, depth, alph, beta);
             v = v > newVal ? v : newVal;
+            if (v > beta)
+            {
+                return v;
+            }
+            alph = alph > v ? alph : v;
         }
         return v;
     }
 
-    private int minValue(BoardBot board, int agent, int depth)
+    private int minValue(BoardBot board, int agent, int depth, int alph, int beta)
     {
         List<Action> legalmoves = getLegalActions(board, board.nextAction, agent,
             gameManager.getTurnNum() + startDifficulty - depth);
@@ -118,8 +132,13 @@ public class Bot : MonoBehaviour
         foreach (Action action in legalmoves)
         {
             BoardBot successor = generateSuccessor(board, 1, action);
-            int newVal = getValue(successor, (agent + 1) % 2, depth);
+            int newVal = getValue(successor, (agent + 1) % 2, depth, alph, beta);
             v = v < newVal ? v : newVal;
+            if (v < alph)
+            {
+                return v;
+            }
+            beta = beta < v ? beta : v;
         }
         return v;
     }
