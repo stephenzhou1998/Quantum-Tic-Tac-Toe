@@ -14,4 +14,9 @@ public class GameManager2 : MonoBehaviour
     {
         SceneManager.LoadScene("PVB");
     }
+
+    public void quit()
+    {
+        Application.Quit();
+    }
 }

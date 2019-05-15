@@ -148,7 +148,6 @@ public class GameManager : MonoBehaviour
     {
         if (pvb && currentPlayer == 2)
         {
-            // TODO: Might be turnNum + 1?
             bot.executeTurn(0, turnNum);
         }
         foreach (Transform square in board.transform)

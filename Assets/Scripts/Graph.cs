@@ -74,9 +74,6 @@ public class Graph : MonoBehaviour
     public HashSet<SpookyMark> getCycle(SpookyMark i){
         HashSet<SpookyMark> visited = new HashSet<SpookyMark>();
         if(dfs(i,visited, null)) {
-            //foreach (SpookyMark j in visited){
-            //    dfs(j,visited, null);
-            //}
             return visited;
         }
         return null;
