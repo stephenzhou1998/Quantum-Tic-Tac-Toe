@@ -157,40 +157,8 @@ public class Bot : MonoBehaviour
         return v;
     }
 
-    public Action getNextMoveopponent(BoardBot board, int actionType, int difficulty, int currentTurn)
-    {
-        List<Action> legalmoves = getLegalActions(board, actionType, 0, currentTurn); // 0 means opponent
-        List<double> Scores = new List<double>();
-
-
-        foreach (Action i in legalmoves)
-        {
-            if (i.actionType == actionType)
-            {
-                GameManagerBot gmCopy = new GameManagerBot(gameManager);
-                BoardBot copy = gmCopy.board;
-                Scores.Add(evalMove(i, copy, 0, difficulty, currentTurn));
-            }
-        }
-        double min = Scores.Min();
-        int index = Scores.IndexOf(min);
-        return legalmoves[index];
-
-
-
-        // Perform tree search for best strategy
-    }
-
     private int evalState(BoardBot board)
-    { // return [Xscore,Oscore]
-        //Debug.Log("Evaluating board: ");
-        //Debug.Log(board);
-        //Debug.Log("Checking filled marks: ");
-        //foreach (SquareBot sq in board.squares)
-        //{
-        //    Debug.Log(sq);
-        //    Debug.Log("Filled marks: " + sq.filledMarks);
-        //}
+    {
         int Xscore = evalplayer(board, 0);
         int Oscore = -evalplayer(board, 1);
         return Xscore + Oscore;
@@ -215,20 +183,17 @@ public class Bot : MonoBehaviour
             // Look into every neighbor
             foreach (int k in neighbors)
             {
-                //Debug.Log("Neighbor " + k + ": ");
                 int gain = 0;
                 SquareBot neigh = board.squares[k];
 
                 // Always good to be next to your own classical mark
                 if (neigh.classicallyMarked && neigh.finalPlayer == agent)
                 {
-                    //Debug.Log("what?");
                     gain += 100;
                 }
                 // Always good to have empty neighbor. More chance for expansion.
                 else if (neigh.filledMarks == 0)
                 {
-                    //Debug.Log("neighbor is empty");
                     gain += 5;
                 }
 
@@ -243,11 +208,9 @@ public class Bot : MonoBehaviour
                     {
                         if (m.player == agent)
                         {
-                            //Debug.Log("hello");
                             gain += 2;
                         }
                         if(m.player != agent){
-                            //Debug.Log("hellooooo");
                             gain -= 5;
                         }
                     }
@@ -260,40 +223,6 @@ public class Bot : MonoBehaviour
             }
         }
         return score;
-    }
-
-
-    public double evalMove(Action move, BoardBot board, int agent, int difficulty, int currentTurn)
-    {
-        double score;
-        if (difficulty == 0)
-        {
-            GameManagerBot gmCopy = new GameManagerBot(gameManager);
-            BoardBot copy = gmCopy.board;
-            move.performAction(copy);
-            score = evalState(copy);
-            return score;
-        }
-        if (agent == 1)
-        {
-            GameManagerBot gmCopy = new GameManagerBot(gameManager);
-            BoardBot copy = gmCopy.board;
-            move.performAction(copy);
-            Action act = getNextMoveopponent(copy, move.actionType, difficulty - 1, currentTurn);
-            act.performAction(copy);
-            return evalState(copy);
-
-        }
-        else if (agent == 0)
-        {
-            GameManagerBot gmCopy = new GameManagerBot(gameManager);
-            BoardBot copy = gmCopy.board;
-            move.performAction(copy);
-            Action act = getNextMove(copy, move.actionType, difficulty - 1, currentTurn);
-            act.performAction(copy);
-            return evalState(copy);
-        }
-        return 0.0;
     }
 
     private List<Action> getLegalActions(BoardBot board, int actionType, int agent, int turnNum)
@@ -341,12 +270,6 @@ public class Bot : MonoBehaviour
         {
             validSquares.Add(validSquares[0]);
         }
-
-        //foreach (int[] c in combinations(2, validSquares.Count))
-        //{
-        //    int p = agent;
-        //    result.Add(new Action(c[0], c[1]));
-        //}
         
         foreach (int first in validSquares)
         {
@@ -362,6 +285,8 @@ public class Bot : MonoBehaviour
         return result;
     }
 
+// Citation:
+// www.technical-recipes.com/2017/obtaining-combinations-of-k-elements-from-n-in-c/
     private IEnumerable<int[]> combinations(int m, int n)
     {
         int[] result = new int[m];
