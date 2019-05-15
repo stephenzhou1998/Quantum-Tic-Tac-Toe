@@ -74,18 +74,19 @@ public class Bot : MonoBehaviour
         int min = Scores.Min();
         int index = Scores.IndexOf(min);
 
-        // Build a list of all min scores
-        double minScore = legalmoves[index];
-        List<int> allMinScores = new List<int>();
-        foreach (int s in Scores)
+        // Build a list of indices of all min scores
+        List<int> minScoreIndices = new List<int>();
+        for (int i = 0; i < Scores.Count; i++)
         {
-            if (s == minScore)
+            int s = Scores[i];
+            if (s == min)
             {
-                allMinScores.Add(s);
+                minScoreIndices.Add(i);
             }
         }
+
         // Now randomly choose one from the min scores
-        return allMinScores[rnd.Next(allMinScores.Count)];
+        return legalmoves[minScoreIndices[Random.Range(0, minScoreIndices.Count)]];
     }
 
     private int getValue(BoardBot board, int agent, int depth, int alph, int beta)
@@ -210,7 +211,7 @@ public class Bot : MonoBehaviour
                         {
                             gain += 2;
                         }
-                        if(m.player != agent){
+                        if(m.player != agent) {
                             gain -= 5;
                         }
                     }
