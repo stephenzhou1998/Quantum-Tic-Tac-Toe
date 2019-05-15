@@ -9,6 +9,7 @@ public class Bot : MonoBehaviour
     private GameManager gameManager;
     public Board actualBoard;
     private int numCopies;
+    private static Random rnd;
     // public int currentTurn;
 
     // Start is called before the first frame update
@@ -17,6 +18,7 @@ public class Bot : MonoBehaviour
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
         // currentTurn = 2;
         numCopies = 0;
+        rnd = new Random();
     }
 
     private BoardBot generateSuccessor(BoardBot board, int agent, Action action)
@@ -71,7 +73,19 @@ public class Bot : MonoBehaviour
 
         int min = Scores.Min();
         int index = Scores.IndexOf(min);
-        return legalmoves[index];
+
+        // Build a list of all min scores
+        double minScore = legalmoves[index];
+        List<int> allMinScores = new List<int>();
+        foreach (int s in Scores)
+        {
+            if (s == minScore)
+            {
+                allMinScores.Add(s);
+            }
+        }
+        // Now randomly choose one from the min scores
+        return allMinScores[rnd.Next(allMinScores.Count)];
     }
 
     private int getValue(BoardBot board, int agent, int depth, int alph, int beta)
@@ -222,21 +236,21 @@ public class Bot : MonoBehaviour
                 else
                 {
                     // more marks means more competition. Gotta win!
-                    gain += 2 * neigh.presentMarks.Count
+                    gain += 10 * neigh.presentMarks.Count;
 
                     // Penalize if spooky mark is the opponent
-                    // foreach (MarkBot m in neigh.presentMarks)
-                    // {
-                    //     if (m.player == agent)
-                    //     {
-                    //         //Debug.Log("hello");
-                    //         gain += 2;
-                    //     }
-                    //     if(m.player != agent){
-                    //         //Debug.Log("hellooooo");
-                    //         gain -= 5;
-                    //     }
-                    // }
+                    foreach (MarkBot m in neigh.presentMarks)
+                    {
+                        if (m.player == agent)
+                        {
+                            //Debug.Log("hello");
+                            gain += 2;
+                        }
+                        if(m.player != agent){
+                            //Debug.Log("hellooooo");
+                            gain -= 5;
+                        }
+                    }
                 }
                 if (sq.classicallyMarked)
                 {
