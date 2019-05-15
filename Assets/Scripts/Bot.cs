@@ -186,6 +186,7 @@ public class Bot : MonoBehaviour
     { // return Score
         int score = 0;
         agent++;
+        // Look through every square
         for (int i = 0; i < 9; i++)
         {
             //Debug.Log("Square " + i + ": ");
@@ -197,35 +198,45 @@ public class Bot : MonoBehaviour
 
             List<int> neighbors = getNeighbor(i);
 
+            // Look into every neighbor
             foreach (int k in neighbors)
             {
                 //Debug.Log("Neighbor " + k + ": ");
                 int gain = 0;
                 SquareBot neigh = board.squares[k];
+
+                // Always good to be next to your own classical mark
                 if (neigh.classicallyMarked && neigh.finalPlayer == agent)
                 {
                     //Debug.Log("what?");
-                    gain += 20;
+                    gain += 100;
                 }
+                // Always good to have empty neighbor. More chance for expansion.
                 else if (neigh.filledMarks == 0)
                 {
                     //Debug.Log("neighbor is empty");
                     gain += 5;
                 }
+
+                // Last case is when neighbor has spooky marks
                 else
                 {
-                    foreach (MarkBot m in neigh.presentMarks)
-                    {
-                        if (m.player == agent)
-                        {
-                            //Debug.Log("hello");
-                            gain += 2;
-                        }
-                        if(m.player != agent){
-                            //Debug.Log("hellooooo");
-                            gain -= 5;
-                        }
-                    }
+                    // more marks means more competition. Gotta win!
+                    gain += 2 * neigh.presentMarks.Count
+
+                    // Penalize if spooky mark is the opponent
+                    // foreach (MarkBot m in neigh.presentMarks)
+                    // {
+                    //     if (m.player == agent)
+                    //     {
+                    //         //Debug.Log("hello");
+                    //         gain += 2;
+                    //     }
+                    //     if(m.player != agent){
+                    //         //Debug.Log("hellooooo");
+                    //         gain -= 5;
+                    //     }
+                    // }
                 }
                 if (sq.classicallyMarked)
                 {
